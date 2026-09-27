@@ -122,17 +122,37 @@ def validarNombre(mensaje):
     borrarPantalla()
     return nombre
 
-ArcFisJug = "jugadores.dat"
+def buscarNombre(nombre, registro):
+    global arcLogJug, arcFisJug
 
-if not os.path.exists(ArcFisJug):
+    index = 0
+    tam = os.path.getsize(arcFisJug)
+    arcLogJug.seek(0,0)
 
-    ArcLogJug = open(ArcFisJug, "w+b")
+    if tam > 0:
+        registro = pickle.load(arcLogJug)
+        while arcLogJug.tell() < tam and registro.nombre != nombre:
+            index = arcLogJug.tell()
+            registro = pickle.load(arcLogJug)
+        if registro.nombre == nombre:
+            return index
+        else:
+            return -1
+    else:
+        return -1
+    
+
+arcFisJug = "jugadores.dat"
+
+if not os.path.exists(arcFisJug):
+
+    arcLogJug = open(arcFisJug, "w+b")
 
     print("creado")
 
 else:
 
-    ArcLogJug = open(ArcFisJug, "r+b")
+    arcLogJug = open(arcFisJug, "r+b")
 
     print("ya existe")
 
