@@ -166,17 +166,20 @@ def formatJugador(registro):
         for j in range(4):
             registro.juegos[i][j] = str(registro.juegos[i][j]).ljust(4, " ")
 
+def abrirArchivo(ruta):
+    if not os.path.exists(ruta):
+        archivo = open(ruta, "w+b")
+        print("Archivo creado")
+    else:
+        archivo = open(ruta, "r+b")
+        print("El archivo ya existe")
+    return archivo
+
+
 arcFisJug = "jugadores.dat"
+arcFisCat = "categorias.dat"
+arcFisOpc = "opcion.dat"
 
-if not os.path.exists(arcFisJug):
-
-    arcLogJug = open(arcFisJug, "w+b")
-
-    print("creado")
-
-else:
-
-    arcLogJug = open(arcFisJug, "r+b")
-
-    print("ya existe")
-
+arcLogJug = abrirArchivo(arcFisJug)
+arcLogCat = abrirArchivo(arcFisCat)
+arcLogOpc = abrirArchivo(arcFisOpc)
