@@ -1,17 +1,17 @@
 
-import os, picle
+import os, pickle
 
-ArcFisiJug = "jugadores.dat"
+ArcFisJug = "jugadores.dat"
 
-if not os.path.exists(ArcFisiJug):
+if not os.path.exists(ArcFisJug):
 
-    ArcLogJug = open(ArcFisiJug, "w+b")
+    ArcLogJug = open(ArcFisJug, "w+b")
 
     print("creado")
 
 else:
 
-    ArcLogJug = open(ArcFisiJug, "r+b")
+    ArcLogJug = open(ArcFisJug, "r+b")
 
     print("ya existe")
 
