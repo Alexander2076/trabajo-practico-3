@@ -115,6 +115,12 @@ def cerrarJuego(jugador, juego):
             cerrar = str(input(f"{rojoError}\nError - Ingrese s/n :{cerrarColor} "))
     return cerrar
 
+def validarNombre(mensaje):
+    nombre = str(input(f"\n{mensaje}").strip())
+    while len(nombre) < 3:
+        nombre = str(input(f"\n{rojoError}Error - Ingrese nuevamente su nombre, al menos 3 caracteres: {cerrarColor}")).strip()
+    borrarPantalla()
+    return nombre
 
 ArcFisJug = "jugadores.dat"
 
