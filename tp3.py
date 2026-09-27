@@ -115,6 +115,7 @@ def cerrarJuego(jugador, juego):
             cerrar = str(input(f"{rojoError}\nError - Ingrese s/n :{cerrarColor} "))
     return cerrar
 
+# VALIDAR NOMBRE
 def validarNombre(mensaje):
     nombre = str(input(f"\n{mensaje}").strip())
     while len(nombre) < 3:
@@ -146,9 +147,24 @@ def jugadorActual(registro, pos):
     arcLogJug.seek(pos, 0)
     registro = pickle.load(arcLogJug)
     jugador = registro.nombre
-    
+
     return jugador
 
+def altaJugador(registro, nombre):
+    global arcLogJug
+    arcLogJug.seek(0, 2)
+    registro = jugador()
+    registro.nombre = nombre
+    formatJugador(registro)
+    pickle.dump(registro, arcLogJug)
+    arcLogJug.flush()
+
+def formatJugador(registro):
+    registro.nombre = registro.nombre.ljust(30, " ")
+    registro.credito = str(registro.credito).ljust(5, " ")
+    for i in range(2):
+        for j in range(4):
+            registro.juegos[i][j] = str(registro.juegos[i][j]).ljust(4, " ")
 
 arcFisJug = "jugadores.dat"
 
