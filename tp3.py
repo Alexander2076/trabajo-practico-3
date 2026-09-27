@@ -123,7 +123,7 @@ def validarNombre(mensaje):
     borrarPantalla()
     return nombre
 
-def buscarNombre(nombre, registro):
+def buscarNombre(nombre, registro, parametro):
     global arcLogJug, arcFisJug
 
     index = 0
@@ -132,10 +132,10 @@ def buscarNombre(nombre, registro):
 
     if tam > 0:
         registro = pickle.load(arcLogJug)
-        while arcLogJug.tell() < tam and registro.nombre != nombre:
+        while arcLogJug.tell() < tam and getattr(registro, parametro) != nombre:
             index = arcLogJug.tell()
             registro = pickle.load(arcLogJug)
-        if registro.nombre == nombre:
+        if getattr(registro, parametro) == nombre:
             return index
         else:
             return -1
@@ -165,6 +165,248 @@ def formatJugador(registro):
     for i in range(2):
         for j in range(4):
             registro.juegos[i][j] = str(registro.juegos[i][j]).ljust(4, " ")
+
+
+# =============== MENU PRINCIPAL =================
+def menuop():
+    borrarPantalla()
+   
+    winsound.PlaySound("sonidos/menu.wav", winsound.SND_ASYNC | winsound.SND_LOOP)
+
+    borrarPantalla()
+    
+    print(f"{azul}╔════════════════════════════════════╗")
+    print(f"{azul}║            🎰  MENU 🎰             ║")
+    print(f"{azul}╚════════════════════════════════════╝{cerrarColor}")
+
+    print(f"{violeta}A. Mayor o Menor.{cerrarColor}")
+    print(f"{rosa}B. Numero Secreto.{cerrarColor}")
+    print(f"{amarillo}C. BlackJack.{cerrarColor}")
+    print(f"{azul}D. Par o Impar.{cerrarColor}")
+    print(f"{verde}E. Reporte.{cerrarColor}")
+    print(f"{rojoIntenso}S. Fin del PROGRAMA{cerrarColor}")
+    
+    print(f"{azul}{'═'*36}{cerrarColor}")
+
+def menu(): 
+    
+    borrarPantalla()
+    opc = ""
+    while (opc != "s"):
+        menuop()
+
+        opc = str(input("\nIngrese la letra del menu: ")).lower()
+        while (opc<"a" or opc>"e" and opc!="s"):
+            opc = str(input(f"{rojoError}\nIngreso invalido - reintente{cerrarColor}"))
+
+        match opc:
+            case "a":
+                winsound.PlaySound(None, winsound.SND_ASYNC)
+                juego1()
+            case "b":
+                winsound.PlaySound(None, winsound.SND_ASYNC)
+                juego2()
+            case "c":
+                winsound.PlaySound(None, winsound.SND_ASYNC)
+                juego3()
+            case "d":
+                winsound.PlaySound(None, winsound.SND_ASYNC)
+                juego4()
+            case "e":
+                winsound.PlaySound(None, winsound.SND_ASYNC)
+                reportes()
+            case "s":
+                salir()
+
+# =============== ADMINISTRACION DE JUEGO =================
+def pantallaAdmin():
+    borrarPantalla()
+    print(f"{rojoIntenso}╔════════════════════════════════════╗")
+    print(f"{rojoIntenso}║        ⚙️ ADMINISTRACION ⚙️        ║")
+    print(f"{rojoIntenso}╚════════════════════════════════════╝{cerrarColor}")
+
+    print(f"{verde}A. Administrar Categorias.{cerrarColor}")
+    print(f"{verde}B. Administrar Opciones.{cerrarColor}")
+    print(f"{azul}C. Volver al menu principal.{cerrarColor}")
+
+    print(f"{rojoIntenso}{'═'*36}{cerrarColor}")
+
+def admin():
+    borrarPantalla()
+    opc = ""
+    while (opc != "c"):
+        pantallaAdmin()
+
+        opc = str(input("\nIngrese la letra del menu: ")).lower()
+        while (opc<"a" or opc>"c"):
+            opc = str(input(f"{rojoError}\nIngreso invalido - reintente{cerrarColor}"))
+
+        match opc:
+            case "a":
+                borrarPantalla()
+                administrarCategorias()
+            case "b":
+                borrarPantalla()
+                administrarOpciones()
+            case "c":
+                borrarPantalla()
+                menu()
+
+def pantallaAdminCategorias():
+    borrarPantalla()
+    print(f"{rojoIntenso}╔════════════════════════════════════╗")
+    print(f"{rojoIntenso}║        ⚙️ ADMINISTRACION ⚙️        ║")
+    print(f"{rojoIntenso}╚════════════════════════════════════╝{cerrarColor}")
+
+    print(f"{verde}a. Alta.{cerrarColor}")
+    print(f"{verde}b. Modificacion.{cerrarColor}")
+    print(f"{verde}c. Baja.{cerrarColor}")
+    print(f"{azul}d. Volver al menu anterior.{cerrarColor}")
+
+    print(f"{rojoIntenso}{'═'*36}{cerrarColor}")
+
+def administrarCategorias():
+    borrarPantalla()
+    opc = ""
+    while (opc != "d"):
+        pantallaAdminCategorias()
+
+        opc = str(input("\nIngrese la letra del menu: ")).lower()
+        while (opc<"a" or opc>"d"):
+            opc = str(input(f"{rojoError}\nIngreso invalido - reintente{cerrarColor}"))
+
+        match opc:
+            case "a":
+                borrarPantalla()
+                altaCategoria()
+            case "b":
+                borrarPantalla()
+                modificarCategoria()
+            case "c":
+                borrarPantalla()
+                bajaCategoria()
+            case "d":
+                borrarPantalla()
+                admin()
+
+def pantallaAdminOpciones():
+    borrarPantalla()
+    print(f"{rojoIntenso}╔════════════════════════════════════╗")
+    print(f"{rojoIntenso}║        ⚙️ ADMINISTRACION ⚙️        ║")
+    print(f"{rojoIntenso}╚════════════════════════════════════╝{cerrarColor}")
+
+    print(f"{verde}a. Alta.{cerrarColor}")
+    print(f"{verde}b. Consulta.{cerrarColor}")
+    print(f"{azul}d. Volver al menu anterior.{cerrarColor}")
+
+    print(f"{rojoIntenso}{'═'*36}{cerrarColor}")
+
+def administrarOpciones():
+    borrarPantalla()
+    opc = ""
+    while (opc != "d"):
+        pantallaAdminOpciones()
+
+        opc = str(input("\nIngrese la letra del menu: ")).lower()
+        while (opc<"a" or opc>"d"):
+            opc = str(input(f"{rojoError}\nIngreso invalido - reintente{cerrarColor}"))
+
+        match opc:
+            case "a":
+                borrarPantalla()
+                altaOpcion()
+            case "b":
+                borrarPantalla()
+                consultaOpcion()
+            case "d":
+                borrarPantalla()
+                admin()
+
+# =============== ADMINISTRACION DE CATEGORIAS =================
+def altaCategoria():
+    borrarPantalla()
+    print(f"{verde}╔════════════════════════════════════╗")
+    print(f"{verde}║        ⚙️ ALTA CATEGORIA ⚙️        ║")
+    print(f"{verde}╚════════════════════════════════════╝{cerrarColor}")
+
+    nombre = validarNombre()
+
+    regCat = categoria()
+
+    arcLogico
+
+    if nombre != "*":
+        pos = buscarNombreCategoria(nombre)
+
+        if pos == -1:
+            pos = listaLlenaCategoria()
+
+            if pos == -2:
+                print(f"{rojoError}\nNo hay espacio para agregar más categorías.{cerrarColor}")
+            else:
+                categoria[pos] = nombre
+                print(f"{verde}\nCategoría '{nombre}' agregada exitosamente.{cerrarColor}")
+        else:
+            print(f"{rojoError}\nLa categoría '{nombre}' ya existe.{cerrarColor}")
+
+
+# =============== SALIR DEL PROGRAMA =================
+def salir():
+    print("Gracias por jugar, no apuestes, juega por diversión")
+
+    continuar = str(input("\nIngrese ENTER para salir".center(10, "-")))
+    while(continuar != ""): 
+        continuar = str(input(f"{rojoError}Error - Ingrese ENTER para salir{cerrarColor}".center(10, "-"))) 
+    
+    #Va a mostrar un print interactivo que va a gregando puntos cada 0.5s, simulando una animacion de salida del programa.
+    print(f"{rojoError}Saliendo", end="", flush=True)
+    for i in range(3):
+        time.sleep(0.5)
+        print(f"{rojoError}.{cerrarColor}", end="", flush=True)
+
+# ================= CARTEL BIENVENIDA =================
+def cartel():
+    
+    winsound.PlaySound("sonidos/musica.wav", winsound.SND_ASYNC)
+    
+    cartel = """
+    ╔════════════════════════════════════════════╗
+    ║              🎰 CASINO ROYAL 🎰            ║
+    ║ JUEGOS DE APUESTAS PROHIBIDOS PARA MENORES ║
+    ║   Y PUEDEN SER PERJUDICIALES PARA LA SALUD ║
+    ║            SOLO MAYORES DE 18 AÑOS         ║
+    ╚════════════════════════════════════════════╝
+        """
+    
+    for i in range(30):
+        if i % 5 == 0:
+            color = rojoNormal 
+        elif i % 5 == 1:
+            color = verde  
+        elif i % 5 == 2:
+            color = amarillo 
+        elif i % 5 == 3:
+            color = violeta
+        else:
+            color = azul  
+        #Cambia el cartel cada 0.2s mientas se ejecuta el for, asi creamos un cartel interactivo que cambia de color.
+        print("\033[H", end="")
+        print(color + cartel + cerrarColor)
+        time.sleep(0.2)
+        
+    winsound.PlaySound(None, winsound.SND_ASYNC)
+
+          
+    
+    continuar = str(input("Ingrese ENTER para entrar".center(50, "-")))
+    while(continuar != ""): 
+        continuar = str(input(f"{rojoError}Error - Ingrese ENTER para entrar{cerrarColor}".center(50, "-"))) 
+
+# ================ INICIO DEL PROGRAMA =================                         
+inicio()
+color()
+cartel()
+menu()
 
 arcFisJug = "jugadores.dat"
 
