@@ -141,6 +141,14 @@ def buscarNombre(nombre, registro):
     else:
         return -1
     
+def jugadorActual(registro, pos): 
+    global arcLogJug
+    arcLogJug.seek(pos, 0)
+    registro = pickle.load(arcLogJug)
+    jugador = registro.nombre
+    
+    return jugador
+
 
 arcFisJug = "jugadores.dat"
 
