@@ -48,6 +48,74 @@ def color():
     negro = "\033[30m"
     cerrarColor = "\033[0m"
 
+# BORRAR PANTALLA
+def borrarPantalla():
+    os.system("cls" if os.name == "nt" else "clear")
+
+# CARTEL DE GANASTE Y PERDISTE
+def mensajeAnimado(mensaje, color):
+
+    print(f"\n{color}{mensaje}", end="", flush=True)
+    for i in range(3):
+        time.sleep(0.4)
+        print(f"{color}.{cerrarColor}", end="", flush=True)
+
+
+# ANIMACION DE MENSAJE GANASTE Y PERDISTE
+def animacion(jugador, mensaje, resultado):
+
+    texto = f"{jugador} {mensaje}".center(50)
+    if(resultado == "gano"): 
+                winsound.PlaySound("sonidos/ganaste.wav", winsound.SND_ASYNC)
+    else: 
+                winsound.PlaySound("sonidos/perdiste.wav", winsound.SND_ASYNC)
+            
+
+    for i in range(20):
+
+        if resultado == "gano":
+
+            if i % 5 == 0:
+                color = rojoNormal
+            elif i % 5 == 1:
+                color = verde
+            elif i % 5 == 2:
+                color = amarillo
+            elif i % 5 == 3:
+                color = azul
+            else:
+                color = violeta
+
+        elif resultado == "perdio":
+
+            if i % 5 == 0:
+                color = rojoNormal
+            elif i % 5 == 1:
+                color = rojoIntenso
+            elif i % 5 == 2:
+                color = rojoError
+            elif i % 5 == 3:
+                color = rojoNormal
+            else:
+                color = rojoIntenso
+        print(f"\r{color}{texto}{cerrarColor}", end="")
+        time.sleep(0.1)
+
+    print()
+
+# CERRAR JUEGOS
+def cerrarJuego(jugador, juego):
+    if (jugador == ""): 
+        cerrar = str(input(f"\nDesea jugar {juego}? (s/n)  ")).lower().strip()
+        while (cerrar != "n" and cerrar != "s"):
+            cerrar = str(input(f"{rojoError}\nError - Ingrese s/n:{cerrarColor} "))
+    else: 
+        cerrar = str(input(f"\n{jugador} desea seguir jugando {juego}? (s/n)  ")).lower().strip()
+        while (cerrar != "n" and cerrar != "s"):
+            cerrar = str(input(f"{rojoError}\nError - Ingrese s/n :{cerrarColor} "))
+    return cerrar
+
+
 ArcFisJug = "jugadores.dat"
 
 if not os.path.exists(ArcFisJug):
