@@ -331,31 +331,47 @@ def administrarOpciones():
                 admin()
 
 # =============== ADMINISTRACION DE CATEGORIAS =================
+def validarPregunta(nombre):
+    pregunta = str(input(f"\nIngrese la pregunta para la categoría '{nombre}': ")).strip()
+    if not pregunta.startswith("¿"):
+        pregunta = "¿" + pregunta
+    if not pregunta.endswith("?"):
+        pregunta = pregunta + "?"
+    borrarPantalla()
+    return pregunta
+
+def formatoCategoria(regCategoria):
+    regCategoria.nroCategoria = str(regCategoria.nroCategoria).ljust(3, " ")
+    regCategoria.nombreCategoria = regCategoria.nombreCategoria.ljust(30, " ")
+    regCategoria.pregunta = regCategoria.pregunta.ljust(200, " ")
+
 def altaCategoria():
     borrarPantalla()
     print(f"{verde}╔════════════════════════════════════╗")
     print(f"{verde}║        ⚙️ ALTA CATEGORIA ⚙️        ║")
     print(f"{verde}╚════════════════════════════════════╝{cerrarColor}")
 
-    nombre = validarNombre()
+    global arcLogCat, arcFisCat
 
-    regCat = categoria()
+    nombre = validarNombre("Ingrese el nombre de la categoría: ")
+    
+    regCategoria = categoria()
 
-    arcLogico
+    pos = buscarNombre(nombre, regCategoria, "nombreCategoria")
 
-    if nombre != "*":
-        pos = buscarNombreCategoria(nombre)
+    if pos == -1:
+        arcLogCat.seek(0, 2)
+        regCategoria.nroCategoria = regCategoria.nroCategoria + 1
+        regCategoria.nombreCategoria = nombre
+        pregunta = validarPregunta(nombre)
+        regCategoria.pregunta = pregunta
+        formatoCategoria(regCategoria)
+        pickle.dump(regCategoria, arcLogCat)
+        arcLogCat.flush()
 
-        if pos == -1:
-            pos = listaLlenaCategoria()
-
-            if pos == -2:
-                print(f"{rojoError}\nNo hay espacio para agregar más categorías.{cerrarColor}")
-            else:
-                categoria[pos] = nombre
-                print(f"{verde}\nCategoría '{nombre}' agregada exitosamente.{cerrarColor}")
-        else:
-            print(f"{rojoError}\nLa categoría '{nombre}' ya existe.{cerrarColor}")
+        print(f"{verde}\nCategoría '{nombre}' agregada exitosamente.{cerrarColor}")
+    else:
+        print(f"{rojoError}\nLa categoría '{nombre}' ya existe.{cerrarColor}")
 
 
 # =============== SALIR DEL PROGRAMA =================
@@ -415,15 +431,6 @@ inicio()
 color()
 cartel()
 menu()
-
-def abrirArchivo(ruta):
-    if not os.path.exists(ruta):
-        archivo = open(ruta, "w+b")
-        print("Archivo creado")
-    else:
-        archivo = open(ruta, "r+b")
-        print("El archivo ya existe")
-    return archivo
 
 
 arcFisJug = "jugadores.dat"
