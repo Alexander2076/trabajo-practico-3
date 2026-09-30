@@ -35,7 +35,7 @@ def matriz(filas, columnas, tipo):
 
 # VARIABLES COLOR
 def color():
-    global verde, rojoError, rosa, cerrarColor, amarillo, violeta, purpura, azul, rojoNormal, rojoIntenso, blanco, negro
+    global verde, rojoError, rosa, cerrarColor, amarillo, violeta, purpura, azul, rojoNormal, rojoIntenso, blanco, negro, cian
     rojoError = "\033[41m"
     rojoNormal = "\033[31m"
     rojoIntenso = "\033[1;38;5;196m"
@@ -44,6 +44,7 @@ def color():
     violeta = "\033[1;38;5;93m"
     rosa = "\033[1;38;5;200m"
     azul = "\033[1;34m"
+    cian = "\033[1;36m"
     blanco = "\033[47m"
     negro = "\033[30m"
     cerrarColor = "\033[0m"
@@ -59,7 +60,6 @@ def mensajeAnimado(mensaje, color):
     for i in range(3):
         time.sleep(0.4)
         print(f"{color}.{cerrarColor}", end="", flush=True)
-
 
 # ANIMACION DE MENSAJE GANASTE Y PERDISTE
 def animacion(jugador, mensaje, resultado):
@@ -102,6 +102,11 @@ def animacion(jugador, mensaje, resultado):
         time.sleep(0.1)
 
     print()
+
+def cerrarEnter():
+    continuar = str(input("\nIngrese ENTER para continuar".center(10, "-")))
+    while(continuar != ""): 
+        continuar = str(input(f"{rojoError}Error - Ingrese ENTER para continuar{cerrarColor}".center(10, "-")))
 
 # CERRAR JUEGOS
 def cerrarJuego(jugador, juego):
@@ -193,6 +198,7 @@ def menuop():
     print(f"{amarillo}C. BlackJack.{cerrarColor}")
     print(f"{azul}D. Par o Impar.{cerrarColor}")
     print(f"{verde}E. Reporte.{cerrarColor}")
+    print(f"{cian}F. Administracion de juegos.{cerrarColor}")
     print(f"{rojoIntenso}S. Fin del PROGRAMA{cerrarColor}")
     
     print(f"{azul}{'═'*36}{cerrarColor}")
@@ -205,7 +211,7 @@ def menu():
         menuop()
 
         opc = str(input("\nIngrese la letra del menu: ")).lower()
-        while (opc<"a" or opc>"e" and opc!="s"):
+        while (opc<"a" or opc>"f" and opc!="s"):
             opc = str(input(f"{rojoError}\nIngreso invalido - reintente{cerrarColor}"))
 
         match opc:
@@ -224,35 +230,40 @@ def menu():
             case "e":
                 winsound.PlaySound(None, winsound.SND_ASYNC)
                 reportes()
+            case "f":
+                winsound.PlaySound(None, winsound.SND_ASYNC)
+                validarClave()
             case "s":
                 salir()
 
 # =============== ADMINISTRACION DE JUEGO =================
 def validarClave():
     borrarPantalla()
+
     intentos = 3
-    clave = getpass.getpass("\nIngrese la clave de administrador: ")
+    clave = getpass.getpass("\nIngrese la clave de administrador: ", echo_char="*")
     while (clave != CLAVE and intentos > 1):
-        clave = getpass.getpass(f"{rojoError}\nClave incorrecta - reintente: {cerrarColor}")
+        clave = getpass.getpass(f"{rojoError}\nClave incorrecta - reintente: {cerrarColor}", echo_char="*")
         intentos -= 1
-    if intentos == 0 and clave != CLAVE:
+    if intentos == 1 and clave != CLAVE:
         print(f"{rojoError}\nHa excedido el número de intentos permitidos, vuelva a intentarlo.{cerrarColor}")
         mensajeAnimado("Volviendo al menu", rojoError)
-        menu()
+        time.sleep(1)
+
     else:
         admin()
 
 def pantallaAdmin():
     borrarPantalla()
-    print(f"{rojoIntenso}╔════════════════════════════════════╗")
-    print(f"{rojoIntenso}║        ⚙️ ADMINISTRACION ⚙️        ║")
-    print(f"{rojoIntenso}╚════════════════════════════════════╝{cerrarColor}")
+    print(f"{cian}╔════════════════════════════════════╗")
+    print(f"{cian}║        ⚙️ ADMINISTRACION ⚙️          ║")
+    print(f"{cian}╚════════════════════════════════════╝{cerrarColor}")
 
     print(f"{verde}A. Administrar Categorias.{cerrarColor}")
     print(f"{verde}B. Administrar Opciones.{cerrarColor}")
     print(f"{azul}C. Volver al menu principal.{cerrarColor}")
 
-    print(f"{rojoIntenso}{'═'*36}{cerrarColor}")
+    print(f"{cian}{'═'*36}{cerrarColor}")
 
 def admin():
     borrarPantalla()
@@ -273,20 +284,20 @@ def admin():
                 administrarOpciones()
             case "c":
                 borrarPantalla()
-                menu()
+
 
 def pantallaAdminCategorias():
     borrarPantalla()
-    print(f"{rojoIntenso}╔════════════════════════════════════╗")
-    print(f"{rojoIntenso}║        ⚙️ ADMINISTRACION ⚙️        ║")
-    print(f"{rojoIntenso}╚════════════════════════════════════╝{cerrarColor}")
+    print(f"{cian}╔════════════════════════════════════╗")
+    print(f"{cian}║        ⚙️ ADMINISTRACION ⚙️          ║")
+    print(f"{cian}╚════════════════════════════════════╝{cerrarColor}")
 
     print(f"{verde}a. Alta.{cerrarColor}")
     print(f"{verde}b. Modificacion.{cerrarColor}")
     print(f"{verde}c. Baja.{cerrarColor}")
     print(f"{azul}d. Volver al menu anterior.{cerrarColor}")
 
-    print(f"{rojoIntenso}{'═'*36}{cerrarColor}")
+    print(f"{cian}{'═'*36}{cerrarColor}")
 
 def administrarCategorias():
     borrarPantalla()
@@ -314,15 +325,15 @@ def administrarCategorias():
 
 def pantallaAdminOpciones():
     borrarPantalla()
-    print(f"{rojoIntenso}╔════════════════════════════════════╗")
-    print(f"{rojoIntenso}║        ⚙️ ADMINISTRACION ⚙️        ║")
-    print(f"{rojoIntenso}╚════════════════════════════════════╝{cerrarColor}")
+    print(f"{cian}╔════════════════════════════════════╗")
+    print(f"{cian}║        ⚙️ ADMINISTRACION ⚙️          ║")
+    print(f"{cian}╚════════════════════════════════════╝{cerrarColor}")
 
     print(f"{verde}a. Alta.{cerrarColor}")
     print(f"{verde}b. Consulta.{cerrarColor}")
     print(f"{azul}d. Volver al menu anterior.{cerrarColor}")
 
-    print(f"{rojoIntenso}{'═'*36}{cerrarColor}")
+    print(f"{cian}{'═'*36}{cerrarColor}")
 
 def administrarOpciones():
     borrarPantalla()
@@ -403,8 +414,10 @@ def altaCategoria():
         arcLogCat.flush()
 
         print(f"{verde}\nCategoría '{nombre}' agregada exitosamente.{cerrarColor}")
+        cerrarEnter()
     else:
         print(f"{rojoError}\nLa categoría '{nombre}' ya existe.{cerrarColor}")
+        cerrarEnter()
 
 def listaCategoriasActivas():
     global arcLogCat, arcFisCat
@@ -425,6 +438,7 @@ def listaCategoriasActivas():
         return True
     else:
         print(f"{rojoError}\nNo hay categorías registradas.{cerrarColor}")
+        cerrarEnter()
         return False
 
 def buscarCategoriaNumero(nroCategoria):
@@ -475,13 +489,15 @@ def modificarCategoria():
             arcLogCat.flush()
 
             print(f"{verde}\nCategoría '{nombre}' modificada exitosamente.{cerrarColor}")
+            cerrarEnter()
         else:
             print(f"{rojoError}\nLa categoría '{nombre}' no existe.{cerrarColor}")
+            cerrarEnter()
 
 def bajaCategoria():
     borrarPantalla()
     print(f"{rojoError}╔════════════════════════════════════╗")
-    print(f"{rojoError}║        ⚙️ BAJA CATEGORIA ⚙️        ║")
+    print(f"{rojoError}║        ⚙️ BAJA CATEGORIA ⚙️          ║")
     print(f"{rojoError}╚════════════════════════════════════╝{cerrarColor}")
 
     global arcLogCat, arcFisCat
@@ -508,8 +524,10 @@ def bajaCategoria():
             arcLogCat.flush()
 
             print(f"{verde}\nCategoría '{nombre}' dada de baja exitosamente.{cerrarColor}")
+            cerrarEnter()
         else:
             print(f"{rojoError}\nLa categoría '{nombre}' no existe.{cerrarColor}")
+            cerrarEnter()
 
 # =============== ADMINISTRACION DE OPCIONES =================
 def formatoOpcion(regOpcion):
@@ -547,8 +565,10 @@ def altaOpciones():
             arcLogOpc.flush()
 
             print(f"{verde}\nOpción '{regOpcion.objeto}' agregada exitosamente a la categoría '{nroCategoria}'.{cerrarColor}")
+            cerrarEnter()
         else:
             print(f"{rojoError}\nLa categoría '{nroCategoria}' no existe.{cerrarColor}")
+            cerrarEnter()
 
 def consultaOpciones():
     borrarPantalla()
@@ -578,8 +598,10 @@ def consultaOpciones():
                 regOpcion = pickle.load(arcLogOpc)
                 if int(regOpcion.nroCategoria) == nroCategoria:
                     print(f"{verde}{regOpcion.nroCategoria:<10}{regOpcion.nroOpcion:<10}{regOpcion.objeto:<100}{regOpcion.valor:<12}{cerrarColor}")
+            cerrarEnter()
         else:
             print(f"{rojoError}\nLa categoría '{nroCategoria}' no existe.{cerrarColor}")
+            cerrarEnter()
 
 # =============== SALIR DEL PROGRAMA =================
 def salir():
@@ -634,11 +656,6 @@ def cartel():
         continuar = str(input(f"{rojoError}Error - Ingrese ENTER para entrar{cerrarColor}".center(50, "-"))) 
 
 # ================ INICIO DEL PROGRAMA =================                         
-inicio()
-color()
-cartel()
-menu()
-
 CLAVE = "1234"
 
 arcFisJug = "jugadores.dat"
@@ -648,3 +665,8 @@ arcFisOpc = "opcion.dat"
 arcLogJug = abrirArchivo(arcFisJug)
 arcLogCat = abrirArchivo(arcFisCat)
 arcLogOpc = abrirArchivo(arcFisOpc)
+
+#inicio()
+color()
+cartel()
+menu()
