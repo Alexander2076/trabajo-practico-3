@@ -1,5 +1,5 @@
 
-import os, pickle, random as aleatorio, time, winsound
+import os, pickle, random as aleatorio, time, winsound, getpass
 
 # ================= REGISTROS ================================
 class categoria:
@@ -228,6 +228,20 @@ def menu():
                 salir()
 
 # =============== ADMINISTRACION DE JUEGO =================
+def validarClave():
+    borrarPantalla()
+    intentos = 3
+    clave = getpass.getpass("\nIngrese la clave de administrador: ")
+    while (clave != CLAVE and intentos > 1):
+        clave = getpass.getpass(f"{rojoError}\nClave incorrecta - reintente: {cerrarColor}")
+        intentos -= 1
+    if intentos == 0 and clave != CLAVE:
+        print(f"{rojoError}\nHa excedido el número de intentos permitidos, vuelva a intentarlo.{cerrarColor}")
+        mensajeAnimado("Volviendo al menu", rojoError)
+        menu()
+    else:
+        admin()
+
 def pantallaAdmin():
     borrarPantalla()
     print(f"{rojoIntenso}╔════════════════════════════════════╗")
@@ -323,10 +337,10 @@ def administrarOpciones():
         match opc:
             case "a":
                 borrarPantalla()
-                altaOpcion()
+                altaOpciones()
             case "b":
                 borrarPantalla()
-                consultaOpcion()
+                consultaOpciones()
             case "d":
                 borrarPantalla()
                 admin()
@@ -625,6 +639,7 @@ color()
 cartel()
 menu()
 
+CLAVE = "1234"
 
 arcFisJug = "jugadores.dat"
 arcFisCat = "categorias.dat"
