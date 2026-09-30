@@ -497,6 +497,76 @@ def bajaCategoria():
         else:
             print(f"{rojoError}\nLa categoría '{nombre}' no existe.{cerrarColor}")
 
+# =============== ADMINISTRACION DE OPCIONES =================
+def formatoOpcion(regOpcion):
+    regOpcion.nroCategoria = str(regOpcion.nroCategoria).ljust(3, " ")
+    regOpcion.nroOpcion = str(regOpcion.nroOpcion).ljust(3, " ")
+    regOpcion.objeto = regOpcion.objeto.ljust(100, " ")
+    regOpcion.valor = str(regOpcion.valor).ljust(12, " ")
+
+def altaOpciones():
+    borrarPantalla()
+    print(f"{verde}╔════════════════════════════════════╗")
+    print(f"{verde}║        ⚙️ ALTA OPCIONES ⚙️         ║")
+    print(f"{verde}╚════════════════════════════════════╝{cerrarColor}")
+
+    global arcLogOpc, arcFisOpc
+
+    validar = listaCategoriasActivas()
+
+    if validar:
+        nroCategoria = int(input(f"\nIngrese el número de la categoría para agregar opciones: "))
+        pos = buscarCategoriaNumero(nroCategoria)
+        while pos == -1:
+            nroCategoria = int(input(f"{rojoError}\nError - Ingrese un número válido de categoría: {cerrarColor}"))
+            pos = buscarCategoriaNumero(nroCategoria)
+
+        if pos != -1:
+            arcLogOpc.seek(0, 2)
+            regOpcion = opcion()
+            regOpcion.nroCategoria = nroCategoria
+            regOpcion.nroOpcion = regOpcion.nroOpcion + 1
+            regOpcion.objeto = str(input(f"\nIngrese la opción para la categoría '{nroCategoria}': ")).strip()
+            regOpcion.valor = int(input(f"\nIngrese el valor de la opción '{regOpcion.objeto}': "))
+            formatoOpcion(regOpcion)
+            pickle.dump(regOpcion, arcLogOpc)
+            arcLogOpc.flush()
+
+            print(f"{verde}\nOpción '{regOpcion.objeto}' agregada exitosamente a la categoría '{nroCategoria}'.{cerrarColor}")
+        else:
+            print(f"{rojoError}\nLa categoría '{nroCategoria}' no existe.{cerrarColor}")
+
+def consultaOpciones():
+    borrarPantalla()
+    print(f"{azul}╔════════════════════════════════════╗")
+    print(f"{azul}║       ⚙️ CONSULTA OPCIONES ⚙️      ║")
+    print(f"{azul}╚════════════════════════════════════╝{cerrarColor}")
+
+    global arcLogOpc, arcFisOpc
+
+    validar = listaCategoriasActivas()
+
+    if validar:
+        nroCategoria = int(input(f"\nIngrese el número de la categoría para consultar opciones: "))
+        pos = buscarCategoriaNumero(nroCategoria)
+        while pos == -1:
+            nroCategoria = int(input(f"{rojoError}\nError - Ingrese un número válido de categoría: {cerrarColor}"))
+            pos = buscarCategoriaNumero(nroCategoria)
+
+        if pos != -1:
+            arcLogOpc.seek(0, 0)
+            tam = os.path.getsize(arcFisOpc)
+
+            print(f"{amarillo}{'Nro Cat':<10}{'Nro Op':<10}{'Opción':<100}{'Valor':<12}{cerrarColor}")
+            print(f"{amarillo}{'═'*132}{cerrarColor}")
+
+            while arcLogOpc.tell() < tam:
+                regOpcion = pickle.load(arcLogOpc)
+                if int(regOpcion.nroCategoria) == nroCategoria:
+                    print(f"{verde}{regOpcion.nroCategoria:<10}{regOpcion.nroOpcion:<10}{regOpcion.objeto:<100}{regOpcion.valor:<12}{cerrarColor}")
+        else:
+            print(f"{rojoError}\nLa categoría '{nroCategoria}' no existe.{cerrarColor}")
+
 # =============== SALIR DEL PROGRAMA =================
 def salir():
     print("Gracias por jugar, no apuestes, juega por diversión")
