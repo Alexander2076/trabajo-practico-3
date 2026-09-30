@@ -123,7 +123,7 @@ def validarNombre(mensaje):
     borrarPantalla()
     return nombre
 
-def buscarNombre(nombre, registro, parametro):
+def buscarNombre(nombre):
     global arcLogJug, arcFisJug
 
     index = 0
@@ -132,25 +132,26 @@ def buscarNombre(nombre, registro, parametro):
 
     if tam > 0:
         registro = pickle.load(arcLogJug)
-        while arcLogJug.tell() < tam and getattr(registro, parametro) != nombre:
+        while arcLogJug.tell() < tam and registro.nombre != nombre:
             index = arcLogJug.tell()
             registro = pickle.load(arcLogJug)
-        if getattr(registro, parametro) == nombre:
+        if registro.nombre == nombre:
             return index
         else:
             return -1
     else:
         return -1
     
-def jugadorActual(registro, pos): 
+def jugadorActual(pos): 
     global arcLogJug
+
     arcLogJug.seek(pos, 0)
     registro = pickle.load(arcLogJug)
     jugador = registro.nombre
 
     return jugador
 
-def altaJugador(registro, nombre):
+def altaJugador(nombre):
     global arcLogJug
     arcLogJug.seek(0, 2)
     registro = jugador()
@@ -339,6 +340,25 @@ def validarPregunta(nombre):
         pregunta = pregunta + "?"
     borrarPantalla()
     return pregunta
+
+def buscarNombreCategoria(nombre):
+    global arcLogCat, arcFisCat
+
+    index = 0
+    tam = os.path.getsize(arcFisCat)
+    arcLogCat.seek(0,0)
+
+    if tam > 0:
+        registro = pickle.load(arcLogCat)
+        while arcLogCat.tell() < tam and registro.nombreCategoria != nombre:
+            index = arcLogCat.tell()
+            registro = pickle.load(arcLogCat)
+        if registro.nombreCategoria == nombre:
+            return index
+        else:
+            return -1
+    else:
+        return -1
 
 def formatoCategoria(regCategoria):
     regCategoria.nroCategoria = str(regCategoria.nroCategoria).ljust(3, " ")
