@@ -373,13 +373,12 @@ def altaCategoria():
 
     global arcLogCat, arcFisCat
 
-    nombre = validarNombre("Ingrese el nombre de la categoría: ")
+    nombre = validarNombre("Ingrese el nombre de la categoría: ").lower()
     
-    regCategoria = categoria()
-
-    pos = buscarNombre(nombre, regCategoria, "nombreCategoria")
+    pos = buscarNombreCategoria(nombre)
 
     if pos == -1:
+        regCategoria = categoria()
         arcLogCat.seek(0, 2)
         regCategoria.nroCategoria = regCategoria.nroCategoria + 1
         regCategoria.nombreCategoria = nombre
@@ -393,6 +392,110 @@ def altaCategoria():
     else:
         print(f"{rojoError}\nLa categoría '{nombre}' ya existe.{cerrarColor}")
 
+def listaCategoriasActivas():
+    global arcLogCat, arcFisCat
+
+    arcLogCat.seek(0, 0)
+    tam = os.path.getsize(arcFisCat)
+
+    if tam > 0:
+        
+        print(f"{azul}{'Activa':<5}{'Nro':<5}{'Nombre':<30}{cerrarColor}")
+        print(f"{azul}{'═'*40}{cerrarColor}")
+
+        while arcLogCat.tell() < tam:
+            regCategoria = pickle.load(arcLogCat)
+            if regCategoria.estado == "A":
+                print(f"{verde}{regCategoria.estado:<5}{regCategoria.nroCategoria:<5}{regCategoria.nombreCategoria:<30}{cerrarColor}")
+
+        return True
+    else:
+        print(f"{rojoError}\nNo hay categorías registradas.{cerrarColor}")
+        return False
+
+def buscarCategoriaNumero(nroCategoria):
+    global arcLogCat, arcFisCat
+
+    index = 0
+    tam = os.path.getsize(arcFisCat)
+    arcLogCat.seek(0,0)
+    registro = pickle.load(arcLogCat)
+
+    while arcLogCat.tell() < tam and int(registro.nroCategoria) != nroCategoria and registro.estado == "A":
+        index = arcLogCat.tell()
+        registro = pickle.load(arcLogCat)
+    if int(registro.nroCategoria) == nroCategoria and registro.estado == "A":
+        return index
+    else:
+        return -1
+    
+
+def modificarCategoria():
+    borrarPantalla()
+    print(f"{amarillo}╔════════════════════════════════════╗")
+    print(f"{amarillo}║      ⚙️ MODIFICAR CATEGORIA ⚙️     ║")
+    print(f"{amarillo}╚════════════════════════════════════╝{cerrarColor}")
+
+    global arcLogCat, arcFisCat
+
+    validar = listaCategoriasActivas()
+
+    if validar:
+        numero = int(input(f"\nIngrese el número de la categoría a modificar: "))
+        pos = buscarCategoriaNumero(numero)
+        while pos == -1:
+            numero = int(input(f"{rojoError}\nError - Ingrese un número válido de categoría: {cerrarColor}"))
+            pos = buscarCategoriaNumero(numero)
+   
+        if pos != -1:
+            arcLogCat.seek(pos, 0)
+            regCategoria = pickle.load(arcLogCat)
+            nombre = regCategoria.nombreCategoria.strip()
+            nuevo_nombre = validarNombre("Ingrese el nuevo nombre de la categoría: ").lower()
+
+            regCategoria.nombreCategoria = nuevo_nombre
+            formatoCategoria(regCategoria)
+
+            arcLogCat.seek(pos, 0)
+            pickle.dump(regCategoria, arcLogCat)
+            arcLogCat.flush()
+
+            print(f"{verde}\nCategoría '{nombre}' modificada exitosamente.{cerrarColor}")
+        else:
+            print(f"{rojoError}\nLa categoría '{nombre}' no existe.{cerrarColor}")
+
+def bajaCategoria():
+    borrarPantalla()
+    print(f"{rojoError}╔════════════════════════════════════╗")
+    print(f"{rojoError}║        ⚙️ BAJA CATEGORIA ⚙️        ║")
+    print(f"{rojoError}╚════════════════════════════════════╝{cerrarColor}")
+
+    global arcLogCat, arcFisCat
+
+    validar = listaCategoriasActivas()
+
+    if validar:
+        numero = int(input(f"\nIngrese el número de la categoría a dar de baja: "))
+        pos = buscarCategoriaNumero(numero)
+        while pos == -1:
+            numero = int(input(f"{rojoError}\nError - Ingrese un número válido de categoría: {cerrarColor}"))
+            pos = buscarCategoriaNumero(numero)
+
+        if pos != -1:
+            arcLogCat.seek(pos, 0)
+            regCategoria = pickle.load(arcLogCat)
+            nombre = regCategoria.nombreCategoria.strip()
+
+            regCategoria.estado = "I"
+            formatoCategoria(regCategoria)
+
+            arcLogCat.seek(pos, 0)
+            pickle.dump(regCategoria, arcLogCat)
+            arcLogCat.flush()
+
+            print(f"{verde}\nCategoría '{nombre}' dada de baja exitosamente.{cerrarColor}")
+        else:
+            print(f"{rojoError}\nLa categoría '{nombre}' no existe.{cerrarColor}")
 
 # =============== SALIR DEL PROGRAMA =================
 def salir():
