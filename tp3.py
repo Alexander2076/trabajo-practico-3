@@ -229,12 +229,124 @@ def menu():
                 juego4()
             case "e":
                 winsound.PlaySound(None, winsound.SND_ASYNC)
-                reportes()
+                menuReporte()
             case "f":
                 winsound.PlaySound(None, winsound.SND_ASYNC)
                 validarClave()
             case "s":
                 salir()
+
+# ================ REPORTE ================
+def pantallaReporte():
+
+    borrarPantalla()
+
+    winsound.PlaySound("sonidos/juegos.wav", winsound.SND_ASYNC)
+
+    print(f"{verde}╔════════════════════════════════════╗")
+    print(f"{verde}║            📊 REPORTE 📊           ║")
+    print(f"{verde}╚════════════════════════════════════╝{cerrarColor}")
+
+    print(f"{amarillo}A - Lista de Jugadores {cerrarColor}")
+    print(f"{cian}B - Juegos jugados por jugador{cerrarColor}")
+    print(f"{azul}C - Volver al menú principal{cerrarColor}")
+
+    print(f"{amarillo}{'═'*36}{cerrarColor}")
+
+def menuReporte():
+
+    borrarPantalla()
+
+    opc = ""
+
+    while (opc != "s"):
+        pantallaReporte()
+
+        opc = str(input("Ingrese la letra del menu: ")).lower()
+        while (opc<"a" or opc>"c"):
+            opc = str(input(f"{rojoError}Ingreso invalido - reintente{cerrarColor}"))
+
+        match opc:
+            case "a":
+                borrarPantalla()
+                listaJugadores()
+            case "b":
+                borrarPantalla()
+                juegosJugados()
+            case "c":
+                borrarPantalla()
+                menu()
+
+def ordenarJugadoresPorCredito():
+    global arcLogJug, arcFisJug
+
+    arcLogJug.seek(0, 0)
+    tam = os.path.getsize(arcFisJug)
+    aux = pickle.load(arcLogJug)
+    tamReg = arcLogJug.tell()
+    cantReg = int(tam // tamReg)
+
+    for i in range(0, cantReg - 1):
+        for j in range(i + 1, cantReg):
+            arcLogJug.seek(i * tamReg, 0)
+            reg1 = pickle.load(arcLogJug)
+
+            arcLogJug.seek(j * tamReg, 0)
+            reg2 = pickle.load(arcLogJug)
+
+            if int(reg1.credito) < int(reg2.credito):
+                arcLogJug.seek(i * tamReg, 0)
+                pickle.dump(reg2, arcLogJug)
+
+                arcLogJug.seek(j * tamReg, 0)
+                pickle.dump(reg1, arcLogJug)
+
+def listaJugadores():
+    global arcLogJug, arcFisJug
+
+    arcLogJug.seek(0, 0)
+    tam = os.path.getsize(arcFisJug)
+
+    if tam > 0:
+        ordenarJugadoresPorCredito()
+        print(f"{amarillo}{'Nombre':<30}{'Credito':<10}{cerrarColor}")
+        print(f"{amarillo}{'═'*40}{cerrarColor}")
+
+        while arcLogJug.tell() < tam:
+            regJugador = pickle.load(arcLogJug)
+            print(f"{verde}{regJugador.nombre:<30}{regJugador.credito:<10}{cerrarColor}")
+
+        cerrarEnter()
+    else:
+        print(f"{rojoError}\nNo hay jugadores registrados.{cerrarColor}")
+        cerrarEnter()
+
+def juegosJugados():
+    global arcLogJug, arcFisJug
+
+    arcLogJug.seek(0, 0)
+    tam = os.path.getsize(arcFisJug)
+
+    if tam > 0:
+        nombre = validarNombre("Ingrese el nombre del jugador para consultar sus juegos: ").lower()
+        pos = buscarNombre(nombre)
+        if pos == -1:
+            print(f"{rojoError}\nJugador no encontrado.{cerrarColor}")
+            cerrarEnter()
+        else:
+            arcLogJug.seek(pos, 0)
+            regJugador = pickle.load(arcLogJug)
+
+            print(f"{cian}\nJuegos jugados por {regJugador.nombre.strip()}:{cerrarColor}")
+            print(f"{cian}Credito actual: {regJugador.credito}{cerrarColor}\n")
+            print(f"{amarillo}{'Partida':<30}{'Mayor o Menor':<15}{'Numero Secreto':<15}{'BlackJack':<15}{'Par o Impar':<15}{cerrarColor}")
+            print(f"{amarillo}{'═'*90}{cerrarColor}")
+            print(f"{verde}{'Ganados':<30}{regJugador.juegos[0][0]:<15}{regJugador.juegos[0][1]:<15}{regJugador.juegos[0][2]:<15}{regJugador.juegos[0][3]:<15}{cerrarColor}")
+            print(f"{rojoNormal}{'Perdidos':<30}{regJugador.juegos[1][0]:<15}{regJugador.juegos[1][1]:<15}{regJugador.juegos[1][2]:<15}{regJugador.juegos[1][3]:<15}{cerrarColor}")
+            cerrarEnter()
+    else:
+        print(f"{rojoError}\nNo hay jugadores registrados.{cerrarColor}")
+        cerrarEnter()
 
 # =============== ADMINISTRACION DE JUEGO =================
 def validarClave():
