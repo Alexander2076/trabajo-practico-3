@@ -181,6 +181,92 @@ def abrirArchivo(ruta):
         print("El archivo ya existe")
     return archivo
 
+# ================ PAR O IMPAR =================
+def juego4():   
+    global arcLogJug, arcFisJug
+
+    borrarPantalla()
+
+    print(f"{azul}\nPar o Impar{cerrarColor}")
+    
+    cerrar = cerrarJuego("", "Par o Impar")
+    if(cerrar == "n"): 
+            mensajeAnimado("\nSaliendo", rojoError)
+    else: 
+        nombre = validarNombre("Ingrese su nombre: ")
+        pos = buscarNombre(nombre)
+        print(f"Posición del jugador: {pos}")
+        if (pos == -1):
+            altaJugador(nombre)
+            pos = buscarNombre(nombre)
+            print(f"Posición del jugador: {pos}")
+
+        while (cerrar != "n"):
+
+            jugador = jugadorActual(pos)
+            print(f"{azul}\nBienvenido {jugador}{cerrarColor}")
+
+            arcLogJug.seek(pos, 0)
+            registro = pickle.load(arcLogJug)
+
+            if registro.credito > 0:
+               
+                numero1 = int(aleatorio.randint(1, 6))
+                numero2 = int(aleatorio.randint(1, 6))
+                suma = numero1 + numero2
+                par = suma % 2
+
+                winsound.PlaySound("sonidos/dados.wav", winsound.SND_ASYNC)
+                mensajeAnimado(f"tirando dados", azul)
+
+                pregunta = str(input(f"{azul}\n\nDecir si es Par o Impar: {cerrarColor}")).lower().strip()
+                while(pregunta != "par" and pregunta != "impar"):
+                    pregunta = str(input(f"{rojoError}\nError - Ingrese nuevamente:{cerrarColor} ")).lower().strip()
+
+                try:
+                    apuesta = int(input(f"{amarillo}\nCuanto desea apostar? (Su saldo es $ {registro.credito}){cerrarColor}: "))
+                except ValueError:
+                    print(f"{rojoError}\nError - Ingrese un número válido:{cerrarColor} ")
+                    continue
+
+                while(apuesta <= 0 or apuesta > registro.credito):
+                    apuesta = int(input(f"{rojoError}\nError - Ingrese nuevamente:{cerrarColor} "))
+
+                if (pregunta == "par"):
+                    if (par == 0):
+                        print(f"\n{verde}Ganaste!!! - La suma de los dados es {suma}.{cerrarColor}")
+                        animacion(jugador, " ganaste !!!!", "gano")
+                        winsound.PlaySound("sonidos/monedas.wav", winsound.SND_ASYNC)
+                        registro.juegos[0][3] += 1 # Incrementar partidas ganadas para el jugador
+                        registro.credito += apuesta # Incrementar el saldo del jugador
+                    else:
+                        print(f"\n{rojoNormal}Perdiste!!! - La suma de los dados es {suma}.{cerrarColor}")
+                        animacion(jugador, " perdiste !!!!", "perdio")
+                        registro.juegos[1][3] += 1 # Incrementar partidas perdidas para el jugador
+                        registro.credito -= apuesta # Reducir el saldo del jugador
+                elif (pregunta == "impar"):
+                    if (par == 1):
+                        print(f"\n{verde}Ganaste!!! - La suma de los dados es {suma}.{cerrarColor}")
+                        animacion(jugador, " ganaste !!!!", "gano")
+                        winsound.PlaySound("sonidos/monedas.wav", winsound.SND_ASYNC)
+                        registro.juegos[0][3] += 1 # Incrementar partidas ganadas para el jugador
+                        registro.credito += apuesta # Incrementar el saldo del jugador
+                    else:
+                        print(f"\n{rojoNormal}Perdiste!!! - La suma de los dados es {suma}.{cerrarColor}")
+                        animacion(jugador, " perdiste !!!!", "perdio")
+                        registro.juegos[1][3] += 1 # Incrementar partidas perdidas para el jugador
+                        registro.credito -= apuesta # Reducir el saldo del jugador
+
+                cerrar = cerrarJuego(jugador, "Par e Impar")
+                if cerrar == "n":
+                    mensajeAnimado("\nSaliendo", rojoError)
+                else:
+                    borrarPantalla()
+            else:
+                print(f"\n{rojoNormal}No tiene mas plata para jugar.{cerrarColor}")
+                mensajeAnimado("Saliendo", rojoError)
+                cerrar = 'n'
+
 # =============== MENU PRINCIPAL =================
 def menuop():
     borrarPantalla()
