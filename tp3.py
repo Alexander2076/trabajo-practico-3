@@ -852,6 +852,7 @@ def menuCategorias():
 
     t = os.path.getsize(archivoFisCat)
     if(t == 0): 
+        limpiarPantalla()
         print(f"{rojoIntenso}aun no hay categorias cargadas!{cerrarColor}")
         return -1
     else: 
@@ -875,7 +876,12 @@ def menuCategorias():
             if(categoria.Estado == "A"):
                 print(f"{verde}  [{contador}] {cerrarColor}{categoria.NombreCategoria}")
                 contador = contador + 1
-
+        if contador == 1:
+            
+            limpiarPantalla()
+            print(f"{rojoIntenso}No hay categorías activas para jugar.{cerrarColor}")
+            
+            return -1
         print()
         print(f"{azul}{'-' * 45}{cerrarColor}")
 
@@ -924,6 +930,7 @@ def juego1():
                     
                     numeroC = menuCategorias()
                     if(numeroC == -1): 
+                      
                        cerrar = "n"
                        continuar()
                     else: 
