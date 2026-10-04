@@ -460,18 +460,15 @@ def bajaCategoria():
 def menuop():
     limpiarPantalla()
     
-    print(f"{azul}╔════════════════════════════════════╗")
-    print(f"{azul}║            🎰  MENU 🎰             ║")
-    print(f"{azul}╚════════════════════════════════════╝{cerrarColor}")
-
-    print(f"{violeta}A. Juego del Menor-Mayor.{cerrarColor}")
-    print(f"{rosa}B. Adivinar el Número Secreto.{cerrarColor}")
-    print(f"{amarillo}C. Blackjack.{cerrarColor}")
-    print(f"{azul}D. Par o Impar.{cerrarColor}")
-    print(f"{verde}E. Reporte.{cerrarColor}")
-    print(f"{violeta}F. Administración de Juegos.{cerrarColor}")
-    print(f"{rojoIntenso}G. Salir del programa.{cerrarColor}")
-    
+    print(f"{azul}MENU PRINCIPAL{cerrarColor}")
+    print(f"{azul}{'═'*36}{cerrarColor}")
+    print(f"{violeta}[A]. Juego del Menor-Mayor.{cerrarColor}")
+    print(f"{rosa}[B]. Adivinar el Número Secreto.{cerrarColor}")
+    print(f"{amarillo}[C]. Blackjack.{cerrarColor}")
+    print(f"{azul}[D]. Par o Impar.{cerrarColor}")
+    print(f"{verde}[E]. Reporte.{cerrarColor}")
+    print(f"{violeta}[F]. Administración de Juegos.{cerrarColor}")
+    print(f"{rojoIntenso}[G]. Salir del programa.{cerrarColor}")
     print(f"{azul}{'═'*36}{cerrarColor}")
 
 def submenu1():
@@ -1523,8 +1520,8 @@ def mostrarEstadisticas(pos):
 
     desformatearJug(jugador)
 
-    nombre = jugador.Nombre[:30]
-
+    nombre = jugador.Nombre
+    print(f"{amarillo}ESTADISTICAS DE {nombre}{cerrarColor}")
     print()
 
     print("\033[1;36m╔════════════════════╦══════════╦══════════╦══════════╗\033[0m")
@@ -1565,7 +1562,7 @@ def mostrarEstadisticas(pos):
 
     print("\033[1;36m╚════════════════════╩══════════╩══════════╩══════════╝\033[0m")
 
-    input(f"{blanco}---Presiona ENTER para continuar---{cerrarColor}")
+    continuar()
 
 def mostrarJugador(): 
     global archivoFisJug
@@ -1574,10 +1571,10 @@ def mostrarJugador():
         print(f"{rojoNormal}no hay jugadores registrados...{cerrarColor}")
         continuar()
     else: 
-        print(f"{amarillo}BUSCAR JUGADOR{cerrarColor}")
         nombre = ""
         while nombre != "*": 
             limpiarPantalla()
+            print(f"{amarillo}BUSCAR JUGADOR{cerrarColor}")
             nombre = str(input("ingrese el nombre del jugador o (*) para salir: "))
             if(nombre != "*"): 
                 pos = buscarJugador(nombre)
@@ -1649,7 +1646,21 @@ def cartel():
     while(continuar != ""): 
         continuar = str(input(f"{rojoError}Error - Ingrese ENTER para entrar{cerrarColor}".center(50, "-"))) 
 
-
+def despedida():
+    limpiarPantalla()
+    print(f"""{rojoIntenso}
+    ╔════════════════════════════════════════════╗
+    ║              🎰 CASINO ROYAL 🎰            ║
+    ║                                            ║
+    ║              ¡GRACIAS POR JUGAR!           ║
+    ║                                            ║
+    ║        NO APUESTE, JUEGA POR DIVERSIÓN     ║
+    ║                                            ║
+    ║           PRESIONE ENTER PARA SALIR        ║
+    ╚════════════════════════════════════════════╝
+    {cerrarColor}""")
+    continuar()
+    limpiarPantalla()
 
 
 
@@ -1658,7 +1669,7 @@ def menu():
     contrasena = "admin1234"
 
     opcion1 = ""
-    while opcion1 != "g": 
+    while opcion1 != "G": 
         menuop()
         opcion1 = str(input("ingrese una opcion: ")).upper()
         if(opcion1 == "A"): 
@@ -1676,10 +1687,11 @@ def menu():
             limpiarPantalla()
             verificar(contrasena)
         elif(opcion1 == "G"): 
-            mensajeAnimado("cerrando sesion", rojoIntenso)
+            # mensajeAnimado("cerrando sesion", rojoIntenso)
             archivoLogOpc.close()
             archivoLogCat.close()
             archivoLogJug.close()
+            despedida()
             
 
 
