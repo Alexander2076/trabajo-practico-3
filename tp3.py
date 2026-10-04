@@ -135,12 +135,19 @@ def buscarNombre(nombre):
     tam = os.path.getsize(arcFisJug)
     arcLogJug.seek(0,0)
 
+    print(f"El tamaño del archivo es: {tam} bytes")
+
     if tam > 0:
         registro = pickle.load(arcLogJug)
-        while arcLogJug.tell() < tam and registro.nombre != nombre:
+        print(f"Registro leído: {registro.nombre.strip()}")
+        print(f"Nombre: {repr(nombre)}")
+        while arcLogJug.tell() < tam and registro.nombre.strip() != nombre:
             index = arcLogJug.tell()
             registro = pickle.load(arcLogJug)
-        if registro.nombre == nombre:
+        print(f"Registro final: {repr(registro.nombre.strip())}")
+        print(f"Posición final: {index}")
+        print(f"Se cumple: {str(registro.nombre).strip() == nombre}")
+        if registro.nombre.strip() == nombre:
             return index
         else:
             return -1
@@ -152,7 +159,7 @@ def jugadorActual(pos):
 
     arcLogJug.seek(pos, 0)
     registro = pickle.load(arcLogJug)
-    jugador = registro.nombre
+    jugador = registro.nombre.strip()
 
     return jugador
 
@@ -160,7 +167,7 @@ def altaJugador(nombre):
     global arcLogJug
     arcLogJug.seek(0, 2)
     registro = jugador()
-    registro.nombre = nombre
+    registro.nombre = nombre.lower()
     formatJugador(registro)
     pickle.dump(registro, arcLogJug)
     arcLogJug.flush()
@@ -209,7 +216,7 @@ def juego4():
             arcLogJug.seek(pos, 0)
             registro = pickle.load(arcLogJug)
 
-            if registro.credito > 0:
+            if float(registro.credito) > 0:
                
                 numero1 = int(aleatorio.randint(1, 6))
                 numero2 = int(aleatorio.randint(1, 6))
@@ -229,7 +236,7 @@ def juego4():
                     print(f"{rojoError}\nError - Ingrese un número válido:{cerrarColor} ")
                     continue
 
-                while(apuesta <= 0 or apuesta > registro.credito):
+                while(apuesta <= 0 or apuesta > float(registro.credito)):
                     apuesta = int(input(f"{rojoError}\nError - Ingrese nuevamente:{cerrarColor} "))
 
                 if (pregunta == "par"):
@@ -237,25 +244,30 @@ def juego4():
                         print(f"\n{verde}Ganaste!!! - La suma de los dados es {suma}.{cerrarColor}")
                         animacion(jugador, " ganaste !!!!", "gano")
                         winsound.PlaySound("sonidos/monedas.wav", winsound.SND_ASYNC)
-                        registro.juegos[0][3] += 1 # Incrementar partidas ganadas para el jugador
-                        registro.credito += apuesta # Incrementar el saldo del jugador
+                        registro.juegos[0][3] = int(registro.juegos[0][3]) + 1 # Incrementar partidas ganadas para el jugador
+                        registro.credito = float(registro.credito) + apuesta # Incrementar el saldo del jugador
                     else:
                         print(f"\n{rojoNormal}Perdiste!!! - La suma de los dados es {suma}.{cerrarColor}")
                         animacion(jugador, " perdiste !!!!", "perdio")
-                        registro.juegos[1][3] += 1 # Incrementar partidas perdidas para el jugador
-                        registro.credito -= apuesta # Reducir el saldo del jugador
+                        registro.juegos[1][3]= int(registro.juegos[1][3]) + 1 # Incrementar partidas perdidas para el jugador
+                        registro.credito = float(registro.credito) - apuesta # Reducir el saldo del jugador
                 elif (pregunta == "impar"):
                     if (par == 1):
                         print(f"\n{verde}Ganaste!!! - La suma de los dados es {suma}.{cerrarColor}")
                         animacion(jugador, " ganaste !!!!", "gano")
                         winsound.PlaySound("sonidos/monedas.wav", winsound.SND_ASYNC)
-                        registro.juegos[0][3] += 1 # Incrementar partidas ganadas para el jugador
-                        registro.credito += apuesta # Incrementar el saldo del jugador
+                        registro.juegos[0][3] = int(registro.juegos[0][3]) + 1 # Incrementar partidas ganadas para el jugador
+                        registro.credito = float(registro.credito) + apuesta # Incrementar el saldo del jugador
                     else:
                         print(f"\n{rojoNormal}Perdiste!!! - La suma de los dados es {suma}.{cerrarColor}")
                         animacion(jugador, " perdiste !!!!", "perdio")
-                        registro.juegos[1][3] += 1 # Incrementar partidas perdidas para el jugador
-                        registro.credito -= apuesta # Reducir el saldo del jugador
+                        registro.juegos[1][3] = int(registro.juegos[1][3]) + 1 # Incrementar partidas perdidas para el jugador
+                        registro.credito = float(registro.credito) - apuesta # Reducir el saldo del jugador
+
+                arcLogJug.seek(pos, 0)
+                formatJugador(registro)
+                pickle.dump(registro, arcLogJug)
+                arcLogJug.flush()
 
                 cerrar = cerrarJuego(jugador, "Par e Impar")
                 if cerrar == "n":
@@ -345,7 +357,7 @@ def menuReporte():
 
     opc = ""
 
-    while (opc != "s"):
+    while (opc != "c"):
         pantallaReporte()
 
         opc = str(input("Ingrese la letra del menu: ")).lower()
@@ -361,7 +373,7 @@ def menuReporte():
                 juegosJugados()
             case "c":
                 borrarPantalla()
-                menu()
+                
 
 def ordenarJugadoresPorCredito():
     global arcLogJug, arcFisJug
@@ -371,6 +383,8 @@ def ordenarJugadoresPorCredito():
     aux = pickle.load(arcLogJug)
     tamReg = arcLogJug.tell()
     cantReg = int(tam // tamReg)
+
+    print(f"Cantidad de registros: {cantReg}")
 
     for i in range(0, cantReg - 1):
         for j in range(i + 1, cantReg):
@@ -393,13 +407,17 @@ def listaJugadores():
     arcLogJug.seek(0, 0)
     tam = os.path.getsize(arcFisJug)
 
+    print(f"El tamaño del archivo es: {tam} bytes")
+
     if tam > 0:
         ordenarJugadoresPorCredito()
         print(f"{amarillo}{'Nombre':<30}{'Credito':<10}{cerrarColor}")
         print(f"{amarillo}{'═'*40}{cerrarColor}")
 
+        arcLogJug.seek(0, 0)
         while arcLogJug.tell() < tam:
             regJugador = pickle.load(arcLogJug)
+            print(f"Posición inicial: {arcLogJug.tell()}")
             print(f"{verde}{regJugador.nombre:<30}{regJugador.credito:<10}{cerrarColor}")
 
         cerrarEnter()
@@ -414,8 +432,9 @@ def juegosJugados():
     tam = os.path.getsize(arcFisJug)
 
     if tam > 0:
-        nombre = validarNombre("Ingrese el nombre del jugador para consultar sus juegos: ").lower()
+        nombre = validarNombre("Ingrese el nombre del jugador para consultar sus juegos: ")
         pos = buscarNombre(nombre)
+        print(f"Posición del jugador: {pos}")
         if pos == -1:
             print(f"{rojoError}\nJugador no encontrado.{cerrarColor}")
             cerrarEnter()
@@ -519,7 +538,7 @@ def administrarCategorias():
                 bajaCategoria()
             case "d":
                 borrarPantalla()
-                admin()
+               
 
 def pantallaAdminOpciones():
     borrarPantalla()
@@ -529,18 +548,18 @@ def pantallaAdminOpciones():
 
     print(f"{verde}a. Alta.{cerrarColor}")
     print(f"{verde}b. Consulta.{cerrarColor}")
-    print(f"{azul}d. Volver al menu anterior.{cerrarColor}")
+    print(f"{azul}c. Volver al menu anterior.{cerrarColor}")
 
     print(f"{cian}{'═'*36}{cerrarColor}")
 
 def administrarOpciones():
     borrarPantalla()
     opc = ""
-    while (opc != "d"):
+    while (opc != "c"):
         pantallaAdminOpciones()
 
         opc = str(input("\nIngrese la letra del menu: ")).lower()
-        while (opc<"a" or opc>"d"):
+        while (opc<"a" or opc>"c"):
             opc = str(input(f"{rojoError}\nIngreso invalido - reintente{cerrarColor}"))
 
         match opc:
@@ -550,9 +569,9 @@ def administrarOpciones():
             case "b":
                 borrarPantalla()
                 consultaOpciones()
-            case "d":
+            case "c":
                 borrarPantalla()
-                admin()
+                
 
 # =============== ADMINISTRACION DE CATEGORIAS =================
 def validarPregunta(nombre):
@@ -859,6 +878,7 @@ CLAVE = "1234"
 arcFisJug = "jugadores.dat"
 arcFisCat = "categorias.dat"
 arcFisOpc = "opcion.dat"
+
 
 arcLogJug = abrirArchivo(arcFisJug)
 arcLogCat = abrirArchivo(arcFisCat)
