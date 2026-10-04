@@ -57,6 +57,17 @@ def continuar():
    
        enter = str(input(f"{blanco}--- Presiona ENTER para continuar ---{cerrarColor}"))
 
+def validarCodigo(): 
+    entrada = input("ingrese un numero de categoria o (0) para salir: ")
+    numeroC = -1
+    while numeroC == -1:
+        try:
+            numeroC = int(entrada)
+        except ValueError:
+            print(f"{rojoIntenso}Solo puedes ingresar numeros!{cerrarColor}")
+            entrada = input("ingrese un numero de categoria o (0) para salir: ")
+    return numeroC
+        
 
 def formatearJug(rJugador):
     rJugador.Nombre = rJugador.Nombre.ljust(30, " ")
@@ -198,7 +209,7 @@ def crearJugador(nombre):
     nuevoJugador.Creditos = 10000
     
     formatearJug(nuevoJugador)
-   
+    archivoLogJug.seek(0, 2)
     posicion = archivoLogJug.tell()
     pickle.dump(nuevoJugador, archivoLogJug)  
   
@@ -349,7 +360,7 @@ def modificarCategoria():
     else: 
         listarCategorias()
 
-        numeroC = int(input("ingresa el numero de categoria para modificar o (0) para salir: "))
+        numeroC = validarCodigo()
 
         while numeroC != 0: 
             
@@ -376,17 +387,23 @@ def modificarCategoria():
                         archivoLogCat.flush()
 
                         print(f"{verde}categoria modificada correctamente!{cerrarColor}")
+                        time.sleep(2)
 
                     else: 
                         print(f"{rojoIntenso}cancelado{cerrarColor}")
+                        time.sleep(2)
 
                 else:
                     print(f"{rojoIntenso}solo puedes modificar categorias activas!{cerrarColor}")
+                    time.sleep(2)
 
             else: 
-                print(f"{rojoError}ingrese un numero de categoria valido!{cerrarColor}")
-
-            numeroC = int(input("ingresa el numero de categoria para modificar o (0) para salir: "))
+                print(f"{rojoIntenso}ingrese un numero de categoria valido!{cerrarColor}")
+                time.sleep(2)
+            limpiarPantalla()
+            print(f"{amarillo} MODIFICAR CATEGORIAS {cerrarColor}")
+            listarCategorias()
+            numeroC = validarCodigo()
     
 
 def bajaCategoria(): 
@@ -400,7 +417,7 @@ def bajaCategoria():
     else: 
         listarCategorias()
 
-        numeroC = int(input("ingresa el numero de categoria para dar de baja o (0) para salir: "))
+        numeroC = validarCodigo()
 
         while numeroC != 0: 
             
@@ -430,17 +447,23 @@ def bajaCategoria():
                         archivoLogCat.flush()
 
                         print(f"{verde}categoria dada de baja correctamente!{cerrarColor}")
+                        time.sleep(2)
 
                     else: 
                         print(f"{rojoIntenso}cancelado{cerrarColor}")
+                        time.sleep(2)
 
                 else:
                     print(f"{rojoIntenso}la categoria ya se encuentra dada de baja!{cerrarColor}")
+                    time.sleep(2)
 
             else: 
-                print(f"{rojoError}ingrese un numero de categoria valido!{cerrarColor}")
-
-            numeroC = int(input("ingresa el numero de categoria para dar de baja o (0) para salir: "))
+                print(f"{rojoIntenso}ingrese un numero de categoria valido!{cerrarColor}")
+                time.sleep(2)
+            limpiarPantalla()
+            print(f"{amarillo}BAJAS DE CATEGORIAS{cerrarColor}")
+            listarCategorias()
+            numeroC = validarCodigo()
 
 
 def menuop():
@@ -590,10 +613,10 @@ def altaOpcion():
         
         listarCategorias()
 
-        numeroC = int(input("ingrese el numero de categoria o (0) para salir: "))
+        numeroC = validarCodigo()
 
         while numeroC != 0: 
-            limpiarPantalla()
+            
             pos = busCategoriaDic(numeroC)
 
             if(pos != -1): 
@@ -625,14 +648,16 @@ def altaOpcion():
                         seguir = input("desea cargar otra opcion? S/N: ").upper()
 
                 else:
-                    print("esa categoria se encuentra dada de baja.")
+                    print(f"{rojoIntenso}esa categoria se encuentra dada de baja.{cerrarColor}")
+                    time.sleep(2)
 
             else: 
-                print("no existe ese numero de categoria")
+                print(f"{rojoIntenso}no existe ese numero de categoria!{cerrarColor}")
+                time.sleep(2)
             limpiarPantalla()
             print(f"{amarillo}ALTA DE OPCIONES{cerrarColor}")
             listarCategorias()
-            numeroC = int(input("ingrese el numero de categoria o (0) para salir: "))
+            numeroC = validarCodigo()
     
 
 def listaropciones(numeroC, regC): 
@@ -684,7 +709,7 @@ def consultaCat():
         continuar()
     else: 
         listarCategorias()
-        numeroC = int(input("ingrese un numero de categoria o (0) para salir: "))
+        numeroC = validarCodigo()
         while numeroC != 0: 
            
             pos = busCategoriaDic(numeroC)
@@ -699,12 +724,12 @@ def consultaCat():
                     print(f"{rojoIntenso}la categoria esta dada de baja! no te puedo mostrar las opciones.{cerrarColor}")
                     time.sleep(2)
             else: 
-                print(f"{rojoError}no existe esa categoria, ingresa otra!{cerrarColor}")
+                print(f"{rojoIntenso}no existe esa categoria, ingresa otra!{cerrarColor}")
                 time.sleep(2)
             limpiarPantalla()
             print(f"{amarillo}CONSULTA DE CATEGORIAS{cerrarColor}")
             listarCategorias()
-            numeroC = int(input("ingrese un numero de categoria o (0) para salir: "))
+            numeroC = validarCodigo()
             
         
         
