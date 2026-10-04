@@ -579,6 +579,7 @@ def cargarOpcion(numeroC, categoria, nroOpcion):
 
 def altaOpcion():
     global archivoFisCat, archivoLogOpc, archivoLogCat
+    limpiarPantalla()
     print(f"{amarillo}ALTA DE OPCIONES{cerrarColor}")
     t = os.path.getsize(archivoFisCat)
 
@@ -586,12 +587,13 @@ def altaOpcion():
         print(f"{rojoNormal}aun no hay categorias cargadas...{cerrarColor}")
         continuar()
     else: 
+        
         listarCategorias()
 
         numeroC = int(input("ingrese el numero de categoria o (0) para salir: "))
 
         while numeroC != 0: 
-           
+            limpiarPantalla()
             pos = busCategoriaDic(numeroC)
 
             if(pos != -1): 
@@ -601,8 +603,8 @@ def altaOpcion():
                 desformatearCat(categoria)
                 if(categoria.Estado == "A"):
 
-                    print("categoria:", categoria.NombreCategoria)
-                    print("Pregunta:", categoria.Pregunta)
+                    print(f"{azul}categoria: {categoria.NombreCategoria} {cerrarColor}")
+                    print(f"{amarillo}Pregunta: ¿{categoria.Pregunta}? {cerrarColor}")
 
                     nroOpcion = contarOpciones(numeroC)
 
@@ -627,14 +629,17 @@ def altaOpcion():
 
             else: 
                 print("no existe ese numero de categoria")
-
+            limpiarPantalla()
+            print(f"{amarillo}ALTA DE OPCIONES{cerrarColor}")
+            listarCategorias()
             numeroC = int(input("ingrese el numero de categoria o (0) para salir: "))
     
 
 def listaropciones(numeroC, regC): 
     
-
     global archivoFisOpc, archivoLogOpc 
+    limpiarPantalla()
+    print(f"{amarillo}OPCIONES DE LA CATEGORIA{cerrarColor}")
     t = os.path.getsize(archivoFisOpc) 
 
     archivoLogOpc.seek(0, 0)
@@ -670,7 +675,7 @@ def listaropciones(numeroC, regC):
                 
 def consultaCat(): 
     global archivoFisCat, archivoLogOpc, archivoLogCat
-    
+    limpiarPantalla()
     print(f"{amarillo}CONSULTA DE CATEGORIAS{cerrarColor}")
     t = os.path.getsize(archivoFisCat)
     
@@ -696,8 +701,11 @@ def consultaCat():
             else: 
                 print(f"{rojoError}no existe esa categoria, ingresa otra!{cerrarColor}")
                 time.sleep(2)
+            limpiarPantalla()
+            print(f"{amarillo}CONSULTA DE CATEGORIAS{cerrarColor}")
             listarCategorias()
             numeroC = int(input("ingrese un numero de categoria o (0) para salir: "))
+            
         
         
 
