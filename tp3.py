@@ -1065,13 +1065,13 @@ def juego2():
 
                 else:
                     print(f"{verde}\nAcertaste el numero es {numeroSec} en el intento - {6 - intentos}.{cerrarColor}")
-                    animacion(jugador, "acertaste!", "gano")
+                    animacion(jugador.nombre, "acertaste!", "gano")
                     jugador.Juegos[1][1] = jugador.Juegos[1][1] + 1
                     numeroSec = 0
                     
                 if(intentos == 0):
                     print(f"{rojoNormal}\nPerdiste el juego. El numero secreto era {numeroSec}.{cerrarColor}")
-                    animacion(jugador, "Perdiste!!!", "perdio")
+                    animacion(jugador.Nombre, "Perdiste!!!", "perdio")
                     jugador.Juegos[1][2] = jugador.Juegos[1][2] + 1
                    
                 
@@ -1403,26 +1403,26 @@ def juego4():
                 if (pregunta == "par"):
                     if (par == 0):
                         print(f"\n{verde}Ganaste!!! - La suma de los dados es {suma}.{cerrarColor}")
-                        animacion(jugador, " ganaste !!!!", "gano")
+                        animacion(jugador.Nombre, " ganaste !!!!", "gano")
                         jugador.Juegos[3][1] = jugador.Juegos[3][1] + 1
                         jugador.Creditos = jugador.Creditos + apuesta
                     
                     else:
                         print(f"\n{rojoNormal}Perdiste!!! - La suma de los dados es {suma}.{cerrarColor}")
-                        animacion(jugador, " perdiste !!!!", "perdio")
+                        animacion(jugador.Nombre, " perdiste !!!!", "perdio")
                         jugador.Juegos[3][2] = jugador.Juegos[3][2] - 1
                         jugador.Creditos = jugador.Creditos - apuesta
                        
                 elif (pregunta == "impar"):
                     if (par == 1):
                         print(f"\n{verde}Ganaste!!! - La suma de los dados es {suma}.{cerrarColor}")
-                        animacion(jugador, " ganaste !!!!", "gano")
+                        animacion(jugador.Nombre, " ganaste !!!!", "gano")
                         jugador.Juegos[3][1] = jugador.Juegos[3][1] + 1
                         jugador.Creditos = jugador.Creditos + apuesta
                         
                     else:
                         print(f"\n{rojoNormal}Perdiste!!! - La suma de los dados es {suma}.{cerrarColor}")
-                        animacion(jugador, " perdiste !!!!", "perdio")
+                        animacion(jugador.Nombre, " perdiste !!!!", "perdio")
                         jugador.Juegos[3][2] = jugador.Juegos[3][2] - 1
                         jugador.Creditos = jugador.Creditos - apuesta
                         
