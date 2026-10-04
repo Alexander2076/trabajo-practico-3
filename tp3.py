@@ -222,20 +222,6 @@ def iniciarJuego():
 
 
 
-def hayCategoriasActivas():
-    global archivoLogCat, archivoFisCat
-
-    t = os.path.getsize(archivoFisCat)
-    archivoLogCat.seek(0, 0)
-
-    while archivoLogCat.tell() < t:
-        categoria = pickle.load(archivoLogCat)
-
-        if categoria.Estado == "A":
-            return 1
-
-    return -1
-
 def busCategoria(nombreC): 
     global archivoFisCat, archivoLogCat
     t = os.path.getsize(archivoFisCat)
