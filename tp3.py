@@ -354,12 +354,12 @@ def listarCategorias():
 
 def modificarCategoria(): 
     global archivoFisCat, archivoLogCat
-    print(f"{amarillo} MODIFICAR CATEGORIA {cerrarColor}")
+    print(f"{amarillo} MODIFICAR CATEGORIAS {cerrarColor}")
     t = os.path.getsize(archivoFisCat)
 
     if(t == 0): 
-        print("no hay categorias cargadas...")
-
+        print(f"{rojoNormal}no hay categorias cargadas...{cerrarColor}")
+        continuar()
     else: 
         listarCategorias()
 
@@ -405,12 +405,12 @@ def modificarCategoria():
 
 def bajaCategoria(): 
     global archivoLogCat, archivoFisCat
-
-
+    print(f"{amarillo}BAJAS DE CATEGORIAS{cerrarColor}")
     t = os.path.getsize(archivoFisCat)
 
     if(t == 0): 
-        print("no hay categorias cargadas...")
+        print(f"{rojoNormal}no hay categorias cargadas...{cerrarColor}")
+        continuar()
     else: 
         listarCategorias()
 
@@ -521,11 +521,11 @@ def admCategorias():
         submenu2()
         opcion3 = int(input("ingrese una opcion: "))
         if(opcion3 == 1): 
-                limpiarPantalla()
-                altaCategoria()
+            limpiarPantalla()
+            altaCategoria()
         elif(opcion3 == 2): 
-                limpiarPantalla()
-                modificarCategoria()
+            limpiarPantalla()
+            modificarCategoria()
         elif(opcion3 == 3): 
             limpiarPantalla()
             bajaCategoria()
@@ -596,15 +596,12 @@ def cargarOpcion(numeroC, categoria, nroOpcion):
 
 def altaOpcion():
     global archivoFisCat, archivoLogOpc, archivoLogCat
-    limpiarPantalla()
+    print(f"{amarillo}ALTA DE OPCIONES{cerrarColor}")
     t = os.path.getsize(archivoFisCat)
 
     if(t == 0): 
         print(f"{rojoNormal}aun no hay categorias cargadas...{cerrarColor}")
-
-    elif(hayCategoriasActivas() == -1):
-        print(f"{rojoNormal}no hay categorias activas para cargar opciones...{cerrarColor}")
-
+        continuar()
     else: 
         listarCategorias()
 
@@ -649,10 +646,10 @@ def altaOpcion():
                 print("no existe ese numero de categoria")
 
             numeroC = int(input("ingrese el numero de categoria o (0) para salir: "))
-    continuar()
+    
 
 def listaropciones(numeroC, regC): 
-    limpiarPantalla()
+    
 
     global archivoFisOpc, archivoLogOpc 
     t = os.path.getsize(archivoFisOpc) 
@@ -691,13 +688,12 @@ def listaropciones(numeroC, regC):
 def consultaCat(): 
     global archivoFisCat, archivoLogOpc, archivoLogCat
     
-    
-    
+    print(f"{amarillo}CONSULTA DE CATEGORIAS{cerrarColor}")
     t = os.path.getsize(archivoFisCat)
     
     if(t == 0): 
-        print("no hay categorias cargadas...")
-        time.sleep(2)
+        print(f"{rojoNormal}no hay categorias cargadas...{cerrarColor}")
+        continuar()
     else: 
         listarCategorias()
         numeroC = int(input("ingrese un numero de categoria o (0) para salir: "))
@@ -730,9 +726,11 @@ def admOpciones():
         submenu3()
         opcion4 = int(input("ingrese una opcion: "))
         if(opcion4 == 1): 
-                altaOpcion()
+            limpiarPantalla()
+            altaOpcion()
         elif(opcion4 == 2): 
-                consultaCat()
+            limpiarPantalla()
+            consultaCat()
         elif(opcion4 == 3): 
             mensajeAnimado("Saliendo", rojoError)
         else: 
