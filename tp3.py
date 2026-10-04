@@ -1512,7 +1512,7 @@ def listarJugadores():
     else:
         print(f"{rojoNormal}No hay jugadores cargados.{cerrarColor}")
 
-    input(f"{blanco}---presiona enter para continuar---{cerrarColor}")
+    continuar()
         
 def mostrarEstadisticas(pos):  
     global archivoLogJug, archivoFisJug
@@ -1568,19 +1568,24 @@ def mostrarEstadisticas(pos):
     input(f"{blanco}---Presiona ENTER para continuar---{cerrarColor}")
 
 def mostrarJugador(): 
-    limpiarPantalla()
-    nombre = ""
-    while nombre != "*": 
-        limpiarPantalla()
+    global archivoFisJug
+    t = os.path.getsize(archivoFisJug)
+    if(t == 0): 
+        print(f"{rojoNormal}no hay jugadores registrados...{cerrarColor}")
+        continuar()
+    else: 
         print(f"{amarillo}BUSCAR JUGADOR{cerrarColor}")
-        nombre = str(input("ingrese el nombre del jugador o (*) para salir: "))
-        if(nombre != "*"): 
-            pos = buscarJugador(nombre)
-            if(pos != -1): 
-                mostrarEstadisticas(pos)
-            else: 
-                print(f"{rojoIntenso}no se encontro el jugador, ingresa uno valido!{cerrarColor}")
-                time.sleep(3)
+        nombre = ""
+        while nombre != "*": 
+            limpiarPantalla()
+            nombre = str(input("ingrese el nombre del jugador o (*) para salir: "))
+            if(nombre != "*"): 
+                pos = buscarJugador(nombre)
+                if(pos != -1): 
+                    mostrarEstadisticas(pos)
+                else: 
+                    print(f"{rojoIntenso}no se encontro el jugador, ingresa uno valido!{cerrarColor}")
+                    time.sleep(3)
         
     
 def menuReporte(): 
@@ -1596,8 +1601,10 @@ def reporte():
         menuReporte()
         op = input("ingresa una opcion: ")
         if op == "a": 
+            limpiarPantalla()
             listarJugadores()
         elif(op == "b"): 
+            limpiarPantalla()
             mostrarJugador()
         elif(op == "c"): 
             mensajeAnimado("Saliendo", rojoError)
