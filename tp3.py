@@ -1433,7 +1433,7 @@ def juego4():
                     else:
                         print(f"\n{rojoNormal}Perdiste!!! - La suma de los dados es {suma}.{cerrarColor}")
                         animacion(jugador.Nombre, " perdiste !!!!", "perdio")
-                        jugador.Juegos[3][2] = jugador.Juegos[3][2] - 1
+                        jugador.Juegos[3][2] = jugador.Juegos[3][2] + 1
                         jugador.Creditos = jugador.Creditos - apuesta
                        
                 elif (pregunta == "impar"):
@@ -1446,7 +1446,7 @@ def juego4():
                     else:
                         print(f"\n{rojoNormal}Perdiste!!! - La suma de los dados es {suma}.{cerrarColor}")
                         animacion(jugador.Nombre, " perdiste !!!!", "perdio")
-                        jugador.Juegos[3][2] = jugador.Juegos[3][2] - 1
+                        jugador.Juegos[3][2] = jugador.Juegos[3][2] + 1
                         jugador.Creditos = jugador.Creditos - apuesta
                         
                     
