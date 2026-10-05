@@ -3,7 +3,7 @@ import pickle, os, random as aleatorio, time, getpass
 
 
 def color():
-    global verde, rojoError, rosa, cerrarColor, amarillo, violeta, purpura, azul, rojoNormal, rojoIntenso, blanco, negro
+    global verde, rojoError, rosa, cerrarColor, fondoVerde, amarillo, violeta, purpura, azul, rojoNormal, rojoIntenso, blanco, negro
     rojoError = "\033[41m"
     rojoNormal = "\033[31m"
     rojoIntenso = "\033[1;38;5;196m"
@@ -14,6 +14,7 @@ def color():
     azul = "\033[1;34m"
     blanco = "\033[47m"
     negro = "\033[30m"
+    fondoVerde = "\033[42m"
     cerrarColor = "\033[0m"
 
 def array(tipo, tam): 
@@ -56,6 +57,14 @@ def continuar():
     while enter != "":
    
        enter = str(input(f"{blanco}--- Presiona ENTER para continuar ---{cerrarColor}"))
+
+def iniciarPartida(color):
+  
+    print(f"{color}╔══════════════════════════════════════════════╗")
+    print(f"{color}║          ▶ Presioná ENTER para jugar        ║")
+    print(f"{color}╚══════════════════════════════════════════════╝{cerrarColor}")
+
+    input()
 
 def validarCodigo(): 
     entrada = input("ingrese un numero de categoria o (0) para salir: ")
@@ -163,7 +172,7 @@ def animacion(jugador, mensaje, resultado):
             elif i % 5 == 3:
                 color = azul
             else:
-                color = violeta
+                color = fondoVerde
 
         elif resultado == "perdio":
 
@@ -172,11 +181,11 @@ def animacion(jugador, mensaje, resultado):
             elif i % 5 == 1:
                 color = rojoIntenso
             elif i % 5 == 2:
-                color = rojoError
+                color = rojoIntenso
             elif i % 5 == 3:
                 color = rojoNormal
             else:
-                color = rojoIntenso
+                color = rojoError
         print(f"\r{color}{texto}{cerrarColor}", end="")
         time.sleep(0.1)
 
@@ -1062,7 +1071,7 @@ def juego2():
         jugador = pickle.load(archivoLogJug)
         desformatearJug(jugador)
         print(f"{amarillo}Hola!: {jugador.Nombre}{cerrarColor}")
-        input(f"----dale enter para iniciar la partida----")
+        iniciarPartida()
         
         while (cerrar != "n"):
             jugador.Juegos[1][0] = jugador.Juegos[1][0] + 1
@@ -1098,7 +1107,7 @@ def juego2():
                     jugador.Juegos[1][2] = jugador.Juegos[1][2] + 1
                    
                 
-            cerrar = cerrarJuego(jugador, "Numero Secreto")
+            cerrar = cerrarJuego(jugador.Nombre, "Numero Secreto")
             if cerrar == "n":
                 mensajeAnimado("\nSaliendo", rojoError)
             else:
