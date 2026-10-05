@@ -58,13 +58,7 @@ def continuar():
    
        enter = str(input(f"{blanco}--- Presiona ENTER para continuar ---{cerrarColor}"))
 
-def iniciarPartida(color):
-  
-    print(f"{color}╔══════════════════════════════════════════════╗")
-    print(f"{color}║          ▶ Presioná ENTER para jugar        ║")
-    print(f"{color}╚══════════════════════════════════════════════╝{cerrarColor}")
 
-    input()
 
 def validarCodigo(): 
     entrada = input("ingrese un numero de categoria o (0) para salir: ")
@@ -1057,7 +1051,7 @@ def juego1():
                             else: 
                                 mensajeAnimado("saliendo", rojoIntenso)
                 else:
-                            print(f"{rojoNormal}{jugador.Nombre}No tienes mas credito para jugar.{cerrarColor}")
+                            print(f"{rojoNormal}{jugador.Nombre} No tienes mas credito para jugar.{cerrarColor}")
                             input(f"{blanco}---presiona enter para salir---{cerrarColor}")
                             mensajeAnimado("saliendo", rojoIntenso)
                             cerrar = "n"
@@ -1066,11 +1060,8 @@ def juego1():
         
 def juego2(): 
     global archivoLogJug
-
-   
-    
+    limpiarPantalla()
     print(f"{rosa}\nNumero Secreto{cerrarColor}")
-    
     cerrar = cerrarJuego("", "Numero Secreto")
     if(cerrar == "n"): 
             mensajeAnimado("saliendo", rojoIntenso)
@@ -1081,14 +1072,16 @@ def juego2():
         jugador = pickle.load(archivoLogJug)
         desformatearJug(jugador)
         print(f"{amarillo}Hola!: {jugador.Nombre}{cerrarColor}")
-        iniciarPartida()
-        
+        input(f"----dale enter para iniciar la partida----")
+       
         while (cerrar != "n"):
+            limpiarPantalla()
             jugador.Juegos[1][0] = jugador.Juegos[1][0] + 1
             numeroSec = int(aleatorio.randint(1, 100))
             intentos = 6
             
             while (intentos != 0 and numeroSec != 0):
+             
                 try:
                     numero = int(input(f"\n{rosa}Ingrese un numero del 1 al 100 - Te quedan {intentos} intentos.{cerrarColor}  "))
                 except ValueError:
@@ -1416,7 +1409,7 @@ def juego4():
                 
 
         while (cerrar != "n"):
-
+            limpiarPantalla()
             jugador.Juegos[3][0] = jugador.Juegos[3][0] + 1
             creditoActual = jugador.Creditos
             
