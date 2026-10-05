@@ -782,16 +782,20 @@ def verificar(c):
     
     intentos = 0
     correcto = "no"
-    print(f"{amarillo}ADMINISTRACION (ACCESO RESTRINGIDO){cerrarColor}")
     while intentos < 3 and correcto == "no":
-       
-        contIngresada = getpass.getpass(f"{verde}ingrese la contraseña: ", echo_char="*")
+        limpiarPantalla()
+        print(f"{amarillo}ADMINISTRACION (ACCESO RESTRINGIDO){cerrarColor}")
+        print(f"{verde}╔══════════════════════════════════════╗{cerrarColor}")
+        print(f"{verde}║          INGRESAR CONTRASEÑA         ║{cerrarColor}")
+        print(f"{verde}╚══════════════════════════════════════╝{cerrarColor}")
+        contIngresada = getpass.getpass(f"{verde} ➜ ", echo_char="*")
         print(cerrarColor)
         if(contIngresada != c): 
             intentos += 1
             if(intentos < 3): 
              print(f"{rojoIntenso}✖ contraseña incorrecta, ingresa nuevamente! tienes {3 - intentos} intentos.{cerrarColor}")
              print(f"{amarillo}Tienes {3 - intentos} intentos{cerrarColor}")
+             time.sleep(2)
              
         else: 
             correcto = "si"
@@ -922,7 +926,7 @@ def juego1():
     print(f"{amarillo}\nMayor o Menor{cerrarColor}")
     cerrar = cerrarJuego("", "Mayor o Menor")
     if (cerrar == "n"): 
-        mensajeAnimado("Saliendo", rojoError)
+        mensajeAnimado("saliendo", rojoIntenso)
     else: 
         posicion = iniciarJuego()
         archivoLogJug.seek(posicion, 0)
@@ -931,125 +935,131 @@ def juego1():
         print(f"{amarillo}Hola!: {jugador.Nombre}{cerrarColor}")
         input(f"----dale enter para iniciar la partida----")
         while cerrar != "n": 
-                
-                jugador.Juegos[0][0] = jugador.Juegos[0][0] + 1
+               
+               
                 creditoActual = jugador.Creditos
-                credito = validarCredito(creditoActual)
                 if(creditoActual > 0.0):
-                    
-                    numeroC = menuCategorias()
-                    if(numeroC == -1): 
-                      
-                       cerrar = "n"
-                       continuar()
-                    else: 
-                        
-                    
-                        posCat = busCategoriaDic(numeroC)
-                    
-                        archivoLogCat.seek(posCat, 0)
-                        categoriaAct = pickle.load(archivoLogCat)
-                        opcionesDeCat = array(None, 6)
-                        desformatearCat(categoriaAct)
-                        cantidadOpciones = obtenerOpciones(numeroC, opcionesDeCat)
-                        if cantidadOpciones < 6:
-                            limpiarPantalla()
-                            print(f"{azul}Categoria: {categoriaAct.NombreCategoria}{cerrarColor}")
-                            print()
-                            print(f"{rojoNormal}Esta categoria no tiene suficientes opciones para jugar, ingresa otra categoria!.{cerrarColor}")
-                            print()
-                            continuar()
+                       
+                        credito = validarCredito(creditoActual)
+                        numeroC = menuCategorias()
+                        if(numeroC == -1): 
+                           cerrar = "n"
+                           continuar()
                         else: 
-                            limpiarPantalla()
-                            print(f"{azul}Categoria: {categoriaAct.NombreCategoria}{cerrarColor}")
-                            posicion1 = aleatorio.randint(0, 5)
-                            campeon = opcionesDeCat[posicion1]
-                            opcionesDeCat[posicion1] = None
-                            aciertos = 0
-                            i = 0
-                            while i < 5:
-                            
+                           
+                            opcionesDeCat = array(None, 6)
+                
+                            cantidadOpciones = obtenerOpciones(numeroC, opcionesDeCat)
+                            jugar = "s"
+                            while cantidadOpciones < 6 and jugar != "n": 
+                                limpiarPantalla()
+                                print(f"{rojoIntenso}esta categoria no tiene suficientes opciones!{cerrarColor}")
+                                seguir = input("desea legir otra categoria? s / n: ")
+                                if(seguir == "n"): 
+                                    jugar = "n"
+                                    cerrar = "n"  
+                                else: 
+                                    numeroC = menuCategorias()
+                                    cantidadOpciones = obtenerOpciones(numeroC, opcionesDeCat)
+                                           
+                            if(jugar == "s"):
+                                jugador.Juegos[0][0] = jugador.Juegos[0][0] + 1
+                                posCat = busCategoriaDic(numeroC)
+                                archivoLogCat.seek(posCat, 0)
+                                categoriaAct = pickle.load(archivoLogCat)
+                                desformatearCat(categoriaAct)
                                 
-                                    posicion2 = aleatorio.randint(0, 5)
-                            
-                                    
-                                    if opcionesDeCat[posicion2] != None:
-                            
-                                        retador = opcionesDeCat[posicion2]
-                            
-                                    
-                                        opcionesDeCat[posicion2] = None
-                            
-                                        print()
-                                        print(f"{amarillo}Ronda {i + 1} de 5{cerrarColor}")
-                            
-                                        print(f" {verde} [1] {campeon.objeto}{cerrarColor}")
-                                        print(f" {verde} [2] {retador.objeto}{cerrarColor}")
-                            
-                                        eleccion = int(input(f"{rosa}¿{categoriaAct.Pregunta}? (Ingresa 1 o 2): {cerrarColor}"))
-                            
-                                        while eleccion != 1 and eleccion != 2:
-                                            eleccion = int(input(f"{rojoError}Opción inválida. Ingresa 1 o 2: {cerrarColor}"))
-                            
+                                posicion1 = aleatorio.randint(0, 5)
+                                campeon = opcionesDeCat[posicion1]
+                                opcionesDeCat[posicion1] = None
+                                aciertos = 0
+                                i = 0
+                                while i < 5:
+                                            limpiarPantalla()
+                                            print(f"{azul}Categoria: {categoriaAct.NombreCategoria}{cerrarColor}")
                                         
-                                        if campeon.valor >= retador.valor:
-                            
-                                            ganadorReal = campeon
-                                            opcionCorrecta = 1
-                            
-                                        else:
-                            
-                                            ganadorReal = retador
-                                            opcionCorrecta = 2
-                            
-                                        print()
-                                        print(f"{amarillo}--- Resultado ---{cerrarColor}")
-                            
-                                        print(f"{azul}• {campeon.objeto}: ${campeon.valor:,}{cerrarColor}")
-                                        print(f"{azul}• {retador.objeto}: ${retador.valor:,}{cerrarColor}")
-                            
+                                            posicion2 = aleatorio.randint(0, 5)
                                     
-                                        if eleccion == opcionCorrecta:
-                            
-                                            print(f"{verde}¡Correcto! Acertaste.{cerrarColor}")
-                            
-                                            aciertos += 1
-                            
-                                        else:
-                            
-                                            print(f"{rojoNormal}¡Fallaste!{cerrarColor}")
-                            
+                                            
+                                            if opcionesDeCat[posicion2] != None:
                                     
-                                        campeon = ganadorReal
-                            
-                                        i += 1
-                                        print(F"{amarillo}La respuesta correcta era: {campeon.objeto}{cerrarColor}")
-                                        input(f"{blanco}----presiona enten para continuar----{cerrarColor}")
+                                                retador = opcionesDeCat[posicion2]
                                     
-                                        limpiarPantalla()
-                            
-                            print()
-                            
-                            print(f"{amarillo}¡Juego terminado!{cerrarColor}")
-                            print(f"{rosa}Tus aciertos totales: {aciertos} de 5{cerrarColor}")
-                        
-                            if(aciertos >= 4): 
-                                animacion(jugador.Nombre, "ganaste!", "gano")
-                                jugador.Creditos = creditoActual + credito
-                                jugador.Juegos[0][1] = jugador.Juegos[0][1] + 1
+                                            
+                                                opcionesDeCat[posicion2] = None
+                                    
+                                                print()
+                                                print(f"{amarillo}Ronda {i + 1} de 5{cerrarColor}")
+                                    
+                                                print(f" {verde} [1] {campeon.objeto}{cerrarColor}")
+                                                print(f" {verde} [2] {retador.objeto}{cerrarColor}")
+                                    
+                                                eleccion = int(input(f"{rosa}¿{categoriaAct.Pregunta}? (Ingresa 1 o 2): {cerrarColor}"))
+                                    
+                                                while eleccion != 1 and eleccion != 2:
+                                                    eleccion = int(input(f"{rojoError}Opción inválida. Ingresa 1 o 2: {cerrarColor}"))
+                                    
+                                                
+                                                if campeon.valor >= retador.valor:
+                                    
+                                                    ganadorReal = campeon
+                                                    opcionCorrecta = 1
+                                    
+                                                else:
+                                    
+                                                    ganadorReal = retador
+                                                    opcionCorrecta = 2
+                                    
+                                                print()
+                                                print(f"{amarillo}--- Resultado ---{cerrarColor}")
+                                    
+                                                print(f"{azul}• {campeon.objeto}: {campeon.valor:,}{cerrarColor}")
+                                                print(f"{azul}• {retador.objeto}: {retador.valor:,}{cerrarColor}")
+                                    
+                                            
+                                                if eleccion == opcionCorrecta:
+                                    
+                                                    print(f"{verde}¡Correcto! Acertaste.{cerrarColor}")
+                                    
+                                                    aciertos += 1
+                                    
+                                                else:
+                                    
+                                                    print(f"{rojoNormal}¡Fallaste!{cerrarColor}")
+                                    
+                                            
+                                                campeon = ganadorReal
+                                    
+                                                i += 1
+                                                print(F"{amarillo}La respuesta correcta era: {campeon.objeto}{cerrarColor}")
+                                                input(f"{blanco}----presiona enten para continuar----{cerrarColor}")
+                                            
+                                                
+                                    
+                                print()
+                                    
+                                print(f"{amarillo}¡Juego terminado!{cerrarColor}")
+                                print(f"{rosa}Tus aciertos totales: {aciertos} de 5{cerrarColor}")
+                                
+                                if(aciertos >= 4): 
+                                        animacion(jugador.Nombre, "ganaste!", "gano")
+                                        jugador.Creditos = creditoActual + credito
+                                        jugador.Juegos[0][1] = jugador.Juegos[0][1] + 1
+                                else: 
+                                        animacion(jugador.Nombre, "perdiste", "perdio")
+                                        jugador.Creditos = creditoActual - credito
+                                        jugador.Juegos[0][2] = jugador.Juegos[0][2] + 1
+                                cerrar = cerrarJuego(jugador.Nombre, "Mayor o Menor")
+                                if cerrar == "n":
+                                            mensajeAnimado("saliendo", rojoIntenso)
+                                else:
+                                            limpiarPantalla()
                             else: 
-                                animacion(jugador.Nombre, "perdiste", "perdio")
-                                jugador.Creditos = creditoActual - credito
-                                jugador.Juegos[0][2] = jugador.Juegos[0][2] + 1
-                            cerrar = cerrarJuego(jugador.Nombre, "Mayor o Menor")
-                            if cerrar == "n":
-                                    mensajeAnimado("Saliendo", rojoError)
-                            else:
-                                    limpiarPantalla()
+                                mensajeAnimado("saliendo", rojoIntenso)
                 else:
                             print(f"{rojoNormal}{jugador.Nombre}No tienes mas credito para jugar.{cerrarColor}")
                             input(f"{blanco}---presiona enter para salir---{cerrarColor}")
-                            mensajeAnimado("Saliendo", rojoError)
+                            mensajeAnimado("saliendo", rojoIntenso)
                             cerrar = "n"
         
         guardar(jugador, posicion)
@@ -1063,7 +1073,7 @@ def juego2():
     
     cerrar = cerrarJuego("", "Numero Secreto")
     if(cerrar == "n"): 
-            mensajeAnimado("\nSaliendo", rojoError)
+            mensajeAnimado("saliendo", rojoIntenso)
             
     else: 
         posicion = iniciarJuego()
@@ -1109,7 +1119,7 @@ def juego2():
                 
             cerrar = cerrarJuego(jugador.Nombre, "Numero Secreto")
             if cerrar == "n":
-                mensajeAnimado("\nSaliendo", rojoError)
+                mensajeAnimado("saliendo", rojoIntenso)
             else:
                 limpiarPantalla()
         guardar(jugador, posicion)
@@ -1339,7 +1349,7 @@ def juego3():
     print(f"{amarillo}\nBlack Jack{cerrarColor}")
     cerrar = cerrarJuego("", "Black Jack")
     if(cerrar == "n"): 
-        mensajeAnimado("\nSaliendo", rojoError)
+        mensajeAnimado("saliendo", rojoIntenso)
     else: 
         posicion = iniciarJuego()
         archivoLogJug.seek(posicion, 0)
@@ -1394,7 +1404,7 @@ def juego4():
     
     cerrar = cerrarJuego("", "Par o Impar")
     if(cerrar == "n"): 
-                mensajeAnimado("\nSaliendo", rojoError)
+        mensajeAnimado("saliendo", rojoIntenso)
     
     else: 
         posicion = iniciarJuego()
@@ -1461,12 +1471,12 @@ def juego4():
                     
                 cerrar = cerrarJuego(jugador.Nombre, "Par e Impar")
                 if cerrar == "n":
-                    mensajeAnimado("\nSaliendo", rojoError)
+                    mensajeAnimado("saliendo", rojoIntenso)
                 else:
                     limpiarPantalla()
             else:
                 print(f"\n{rojoNormal}No tiene mas credito para jugar.{cerrarColor}")
-                mensajeAnimado("Saliendo", rojoError)
+                mensajeAnimado("saliendo", rojoIntenso)
                 cerrar = "n"
         guardar(jugador, posicion)
 
