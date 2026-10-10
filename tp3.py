@@ -482,6 +482,8 @@ def menuop():
     print(f"{violeta}[F]. Administración de Juegos.{cerrarColor}")
     print(f"{rojoIntenso}[G]. Salir del programa.{cerrarColor}")
     print(f"{azul}{'═'*36}{cerrarColor}")
+    
+    
 
 def submenu1():
 
@@ -822,12 +824,8 @@ def obtenerOpciones(numeroC, arrOp):
                 arrOp[i] = opcion
                 i += 1
             else:
-                posicion = aleatorio.randint(0, cantidad - 1)
-                
-                if posicion < 6:
-                    arrOp[posicion] = opcion
-                    
-                    
+                posicion = aleatorio.randint(0, 5)
+                arrOp[posicion] = opcion      
     return i
         
     
@@ -928,8 +926,6 @@ def juego1():
         print(f"{amarillo}Hola!: {jugador.Nombre}{cerrarColor}")
         input(f"----dale enter para iniciar la partida----")
         while cerrar != "n": 
-               
-               
                 creditoActual = jugador.Creditos
                 if(creditoActual > 0.0):
                         
@@ -940,7 +936,7 @@ def juego1():
                            continuar()
                         else: 
                             opcionesDeCat = array(None, 6)
-                            cantidadOpciones = obtenerOpciones(numeroC, opcionesDeCat)                    
+                            cantidadOpciones = obtenerOpciones(numeroC, opcionesDeCat)                 
                             jugar = "s"
                             while cantidadOpciones < 6 and jugar != "n": 
                                 limpiarPantalla()
@@ -1387,7 +1383,7 @@ def juego3():
             else:
                 limpiarPantalla()
         guardar(jugador, posicion)
-     
+
        
        
         
@@ -1418,7 +1414,7 @@ def juego4():
             
             
 
-            if creditoActual > 0:
+            if creditoActual > 0.0:
                         
                 
                
@@ -1691,7 +1687,7 @@ def despedida():
     limpiarPantalla()
     print(f"""{rojoIntenso}
     ╔════════════════════════════════════════════╗
-    ║              🎰 CASINO ROYAL 🎰            ║
+    ║              🎰 CASINO ROYAL 🎰           ║
     ║                                            ║
     ║              ¡GRACIAS POR JUGAR!           ║
     ║                                            ║
