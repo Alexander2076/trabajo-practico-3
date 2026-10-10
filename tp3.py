@@ -1,4 +1,4 @@
-import pickle, os, random as aleatorio, time, getpass
+import pickle, os, random as aleatorio, time, getpass, winsound
 
 
 
@@ -103,13 +103,12 @@ def desformatearCat(categoria):
     categoria.Pregunta = categoria.Pregunta.strip()
 
 def formatearOpc(opcion):
-
     opcion.NroCategoria = str(opcion.NroCategoria).ljust(2, " ")
     opcion.NroOpcion = str(opcion.NroOpcion).ljust(2, " ")
     opcion.objeto = opcion.objeto.ljust(100, " ")
     opcion.valor = str(opcion.valor).ljust(6, " ")
+    
 def desformatearOpc(opcion):
-
     opcion.NroCategoria = int(opcion.NroCategoria.strip())
     opcion.NroOpcion = int(opcion.NroOpcion.strip())
     opcion.objeto = opcion.objeto.strip()
@@ -145,10 +144,10 @@ def guardar(jugador, posicion):
 def animacion(jugador, mensaje, resultado):
 
     texto = f"{jugador} {mensaje}".center(50)
-    # if(resultado == "gano"): 
-    #             winsound.PlaySound("sonidos/ganaste.wav", winsound.SND_ASYNC)
-    # else: 
-    #             winsound.PlaySound("sonidos/perdiste.wav", winsound.SND_ASYNC)
+    if(resultado == "gano"): 
+                winsound.PlaySound("sonidos/ganaste.wav", winsound.SND_ASYNC)
+    else: 
+                winsound.PlaySound("sonidos/perdiste.wav", winsound.SND_ASYNC)
             
 
     for i in range(20):
@@ -219,7 +218,7 @@ def crearJugador(nombre):
 
 def iniciarJuego(): 
 
-    
+    print()
     print(f"{amarillo}╔══════════════════════════════════════╗{cerrarColor}")
     print(f"{amarillo}║          INGRESAR NOMBRE          {amarillo}   ║{cerrarColor}")
     print(f"{amarillo}╚══════════════════════════════════════╝{cerrarColor}")
@@ -228,6 +227,7 @@ def iniciarJuego():
     posicion = buscarJugador(nombre)
     if (posicion == -1): 
         posicion = crearJugador(nombre)
+    
     return posicion
          
 
@@ -532,15 +532,19 @@ def admCategorias():
         submenu2()
         opcion3 = int(input("ingrese una opcion: "))
         if(opcion3 == 1): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             limpiarPantalla()
             altaCategoria()
         elif(opcion3 == 2): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             limpiarPantalla()
             modificarCategoria()
         elif(opcion3 == 3): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             limpiarPantalla()
             bajaCategoria()
         elif(opcion3 == 4): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             mensajeAnimado("saliendo", rojoError)
         else: 
             print(f"{rojoIntenso}ingrese una opcion valida...{cerrarColor}")
@@ -748,12 +752,15 @@ def admOpciones():
         submenu3()
         opcion4 = int(input("ingrese una opcion: "))
         if(opcion4 == 1): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             limpiarPantalla()
             altaOpcion()
         elif(opcion4 == 2): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             limpiarPantalla()
             consultaCat()
         elif(opcion4 == 3): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             mensajeAnimado("Saliendo", rojoError)
         else: 
             print("ingrese una opcion valida...")
@@ -765,10 +772,13 @@ def administracion():
         submenu1()
         opcion2 = int(input("ingrese una opcion: "))
         if(opcion2 == 1): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             admCategorias()
         elif(opcion2 == 2): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             admOpciones()
         elif (opcion2 == 3): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             mensajeAnimado("saliendo", rojoError)
         else: 
             print("ingrese una opcion valida! ")
@@ -855,7 +865,7 @@ def elegirCategoria(op):
 def menuCategorias():
     
     global archivoFisCat, archivoLogCat
-
+    limpiarPantalla()
     t = os.path.getsize(archivoFisCat)
     if(t == 0): 
         limpiarPantalla()
@@ -897,15 +907,21 @@ def menuCategorias():
             print()
             print(f"{rojoError}Opción inválida. Seleccione nuevamente.{cerrarColor}")
             opcion = int(input(f"{rosa}Seleccione una categoría: {cerrarColor}"))
+        
+        winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
+   
         resultado = elegirCategoria(opcion)
         return resultado
 
 
     
-def validarCredito(creditoAc): 
-    credito = float(input(f"{amarillo}Cuanto credito quieres apostar? tu credito actual es de ${creditoAc}: {cerrarColor}"))
+def validarCredito(creditoAc, nombre): 
+    
+    credito = float(input(f"{azul} \n {nombre} ¿Cuanto credito quieres apostar? tu credito actual es de ${creditoAc}: {cerrarColor}"))
     while(credito < 1 or credito > creditoAc): 
-         credito = float(input(f"{rojoIntenso}Credito invalido! tu credito actual es de ${creditoAc}: {cerrarColor}"))
+         credito = float(input(f"{rojoIntenso} \n Credito invalido! tu credito actual es de ${creditoAc}: {cerrarColor}"))
+    winsound.PlaySound("sonidos/registrar-pago.wav", winsound.SND_ASYNC)
+    time.sleep(2)
     return credito
         
 
@@ -914,22 +930,25 @@ def validarCredito(creditoAc):
 
 def juego1(): 
     global archivoLogJug, archivoLogCat
-    print(f"{amarillo}\nMayor o Menor{cerrarColor}")
+    print(f"{amarillo}Mayor o Menor{cerrarColor}")
     cerrar = cerrarJuego("", "Mayor o Menor")
     if (cerrar == "n"): 
         mensajeAnimado("saliendo", rojoIntenso)
     else: 
+        limpiarPantalla()
+        print(f"{amarillo}Mayor o Menor{cerrarColor}")
         posicion = iniciarJuego()
         archivoLogJug.seek(posicion, 0)
         jugador = pickle.load(archivoLogJug)
         desformatearJug(jugador)
-        print(f"{amarillo}Hola!: {jugador.Nombre}{cerrarColor}")
-        input(f"----dale enter para iniciar la partida----")
+        print(f"{amarillo} \n Hola!: {jugador.Nombre}{cerrarColor} \n ")
+        continuar()
         while cerrar != "n": 
+                limpiarPantalla()
+                print(f"{amarillo}Mayor o Menor{cerrarColor}")
                 creditoActual = jugador.Creditos
                 if(creditoActual > 0.0):
-                        
-                        credito = validarCredito(creditoActual)
+                        credito = validarCredito(creditoActual, jugador.Nombre)
                         numeroC = menuCategorias()
                         if(numeroC == -1): 
                            cerrar = "n"
@@ -950,6 +969,7 @@ def juego1():
                                     cantidadOpciones = obtenerOpciones(numeroC, opcionesDeCat)
                                            
                             if(jugar == "s"):
+                          
                                 jugador.Juegos[0][0] = jugador.Juegos[0][0] + 1
                                 posCat = busCategoriaDic(numeroC)
                                 archivoLogCat.seek(posCat, 0)
@@ -962,6 +982,7 @@ def juego1():
                                 i = 0
                                 while i < 5:
                                             limpiarPantalla()
+                                            print(f"{amarillo}\nMayor o Menor{cerrarColor}\n")                              
                                             print(f"{azul}Categoria: {categoriaAct.NombreCategoria}{cerrarColor}")
                                         
                                             posicion2 = aleatorio.randint(0, 5)
@@ -1018,7 +1039,7 @@ def juego1():
                                                     aciertos += 1
                                     
                                                 else:
-                                    
+                                                    winsound.PlaySound("sonidos/no-acerto.wav", winsound.SND_ASYNC)
                                                     print(f"{rojoNormal}¡Fallaste!{cerrarColor}")
                                     
                                             
@@ -1026,7 +1047,7 @@ def juego1():
                                     
                                                 i += 1
                                                 print(F"{amarillo}La respuesta correcta era: {campeon.objeto}{cerrarColor}")
-                                                input(f"{blanco}----presiona enten para continuar----{cerrarColor}")
+                                                continuar()
                                             
                                                 
                                     
@@ -1052,7 +1073,7 @@ def juego1():
                                 mensajeAnimado("saliendo", rojoIntenso)
                 else:
                             print(f"{rojoNormal}{jugador.Nombre} No tienes mas credito para jugar.{cerrarColor}")
-                            input(f"{blanco}---presiona enter para salir---{cerrarColor}")
+                            continuar()
                             mensajeAnimado("saliendo", rojoIntenso)
                             cerrar = "n"
         guardar(jugador, posicion)
@@ -1060,60 +1081,72 @@ def juego1():
 def juego2(): 
     global archivoLogJug
     limpiarPantalla()
-    print(f"{rosa}\nNumero Secreto{cerrarColor}")
+    print(f"{rosa}Numero Secreto{cerrarColor}")
     cerrar = cerrarJuego("", "Numero Secreto")
     if(cerrar == "n"): 
             mensajeAnimado("saliendo", rojoIntenso)
             
     else: 
+        limpiarPantalla()
+        print(f"{rosa}Numero Secreto{cerrarColor}")
         posicion = iniciarJuego()
         archivoLogJug.seek(posicion, 0)
         jugador = pickle.load(archivoLogJug)
         desformatearJug(jugador)
-        print(f"{amarillo}Hola!: {jugador.Nombre}{cerrarColor}")
-        input(f"----dale enter para iniciar la partida----")
-       
+        print(f"{amarillo} \n Hola!: {jugador.Nombre}{cerrarColor} \n")
+        continuar()
         while (cerrar != "n"):
             limpiarPantalla()
-            jugador.Juegos[1][0] = jugador.Juegos[1][0] + 1
-            numeroSec = int(aleatorio.randint(1, 100))
-            intentos = 6
-            
-            while (intentos != 0 and numeroSec != 0):
-             
-                try:
-                    numero = int(input(f"\n{rosa}Ingrese un numero del 1 al 100 - Te quedan {intentos} intentos.{cerrarColor}  "))
-                except ValueError:
-                    print(f"{rojoError}\nError - Ingrese un numero correcto:{cerrarColor} ")
-                    continue
+            print(f"{rosa}Numero Secreto{cerrarColor}")
+            creditoActual = jugador.Creditos
+            if(creditoActual > 0.0):
+                jugador.Juegos[1][0] = jugador.Juegos[1][0] + 1
+                numeroSec = int(aleatorio.randint(1, 100))
+                intentos = 6
                 
-                while (numero <= 0 or numero > 100):
-                    numero = int(input(f"{rojoError}\nError - Ingrese un valor correcto:{cerrarColor} ").isdigit())
-
-                if (numero > numeroSec):
-                    print(f"{rojoNormal}\nES MENOR{cerrarColor}")
-                    intentos -= 1
-                elif (numero < numeroSec):
-                    print(f"{rojoNormal}\nES MAYOR{cerrarColor}")
-                    intentos -= 1
-
-                else:
-                    print(f"{verde}\nAcertaste el numero es {numeroSec} en el intento - {6 - intentos}.{cerrarColor}")
-                    animacion(jugador.nombre, "acertaste!", "gano")
-                    jugador.Juegos[1][1] = jugador.Juegos[1][1] + 1
-                    numeroSec = 0
+                while (intentos != 0 and numeroSec != 0):
+                    limpiarPantalla()
+                    print(f"{rosa}Numero Secreto{cerrarColor}")
                     
-                if(intentos == 0):
-                    print(f"{rojoNormal}\nPerdiste el juego. El numero secreto era {numeroSec}.{cerrarColor}")
-                    animacion(jugador.Nombre, "Perdiste!!!", "perdio")
-                    jugador.Juegos[1][2] = jugador.Juegos[1][2] + 1
-                   
-                
-            cerrar = cerrarJuego(jugador.Nombre, "Numero Secreto")
-            if cerrar == "n":
+                    try:
+                        numero = int(input(f"\n{rosa}Ingrese un numero del 1 al 100 - Te quedan {intentos} intentos.{cerrarColor}  "))
+                    except ValueError:
+                        print(f"{rojoError}\nError - Ingrese un numero correcto:{cerrarColor} ")
+                        continue
+                    
+                    while (numero <= 0 or numero > 100):
+                        numero = int(input(f"{rojoError}\nError - Ingrese un valor correcto:{cerrarColor} ").isdigit())
+
+                    if (numero > numeroSec):
+                        print(f"{rojoNormal}\nES MENOR\n{cerrarColor}")
+                        intentos -= 1
+                        continuar()
+                    elif (numero < numeroSec):
+                        print(f"{rojoNormal}\nES MAYOR\n{cerrarColor}")
+                        intentos -= 1
+                        continuar()
+                    else:
+                        print(f"{verde}\nAcertaste el numero es {numeroSec} en el intento - {6 - intentos}.{cerrarColor}")
+                        animacion(jugador.nombre, "acertaste!", "gano")
+                        jugador.Juegos[1][1] = jugador.Juegos[1][1] + 1
+                        numeroSec = 0
+                        
+                    if(intentos == 0):
+                        print(f"{rojoNormal}\nPerdiste el juego. El numero secreto era {numeroSec}.{cerrarColor}")
+                        animacion(jugador.Nombre, "Perdiste!!!", "perdio")
+                        jugador.Juegos[1][2] = jugador.Juegos[1][2] + 1
+                    
+                    
+                cerrar = cerrarJuego(jugador.Nombre, "Numero Secreto")
+                if cerrar == "n":
+                    mensajeAnimado("saliendo", rojoIntenso)
+                else:
+                    limpiarPantalla()
+            else: 
+                print(f"{rojoNormal}{jugador.Nombre} No tienes mas credito para jugar.{cerrarColor}")
+                continuar()
                 mensajeAnimado("saliendo", rojoIntenso)
-            else:
-                limpiarPantalla()
+                cerrar = "n"
         guardar(jugador, posicion)
        
 # ================ BLACK JACK =================
@@ -1338,50 +1371,62 @@ def juego3():
     global archivoLogJug
     
     limpiarPantalla()
-    print(f"{amarillo}\nBlack Jack{cerrarColor}")
+    print(f"{amarillo}Black Jack{cerrarColor}")
     cerrar = cerrarJuego("", "Black Jack")
     if(cerrar == "n"): 
         mensajeAnimado("saliendo", rojoIntenso)
     else: 
+        limpiarPantalla()
+        print(f"{amarillo}Black Jack{cerrarColor}")
         posicion = iniciarJuego()
         archivoLogJug.seek(posicion, 0)
         jugador = pickle.load(archivoLogJug)
         desformatearJug(jugador)
-        print(f"{amarillo}Hola!: {jugador.Nombre}{cerrarColor}")
-        input(f"----dale enter para iniciar la partida----")
+        print(f"{amarillo}\n Hola!: {jugador.Nombre}{cerrarColor} \n")
+        continuar()
         while cerrar != "n":
-            jugador.Juegos[2][0] = jugador.Juegos[2][0] + 1
-            mazo = matriz(52,2,0)
-            crearMazo(mazo)
-            mezclarMazo(mazo)
-            cJugador = matriz(8,2,0)
-            cBanca = matriz(8,2,0)
-            carta1 = pedirCarta(mazo)
-            carta2 = pedirCarta(mazo)
-            agregarCarta(cBanca, carta1, 8)
-            agregarCarta(cBanca, carta2, 8)
-            puntosJugador = turnoJugador(cJugador,cBanca,mazo)
-            if puntosJugador > 21:
-                jugador.Juegos[2][2] = jugador.Juegos[2][2] + 1
-                animacion(jugador.Nombre,"te pasaste de 21","perdio")
-            else:
-                puntosBanca = turnoBanca(cBanca,cJugador,mazo)
-                print(f"\n{verde}Jugador: {puntosJugador} {cerrarColor}")
-                print(f"\n{azul}Banca: {puntosBanca} {cerrarColor}")
-                if puntosBanca > 21 or puntosJugador > puntosBanca:
-                    jugador.Juegos[2][1] = jugador.Juegos[2][1] + 1
-                    animacion(jugador.Nombre,"ganaste","gano")
-                elif puntosBanca > puntosJugador:
+            limpiarPantalla()
+            print(f"{amarillo}Black Jack{cerrarColor}")
+            creditoActual = jugador.Creditos
+            if creditoActual > 0.0:
+                jugador.Juegos[2][0] = jugador.Juegos[2][0] + 1
+                mazo = matriz(52,2,0)
+                crearMazo(mazo)
+                mezclarMazo(mazo)
+                cJugador = matriz(8,2,0)
+                cBanca = matriz(8,2,0)
+                carta1 = pedirCarta(mazo)
+                carta2 = pedirCarta(mazo)
+                agregarCarta(cBanca, carta1, 8)
+                agregarCarta(cBanca, carta2, 8)
+                puntosJugador = turnoJugador(cJugador,cBanca,mazo)
+                if puntosJugador > 21:
                     jugador.Juegos[2][2] = jugador.Juegos[2][2] + 1
-                    animacion(jugador.Nombre,"perdiste","perdio")
+                    animacion(jugador.Nombre,"te pasaste de 21","perdio")
                 else:
-                    print("Empate")
-            
-            cerrar = cerrarJuego(jugador.Nombre,"Black Jack")
-            if cerrar == "n":
-                mensajeAnimado("Saliendo", rojoError)
-            else:
-                limpiarPantalla()
+                    puntosBanca = turnoBanca(cBanca,cJugador,mazo)
+                    print(f"\n{verde}Jugador: {puntosJugador} {cerrarColor}")
+                    print(f"\n{azul}Banca: {puntosBanca} {cerrarColor}")
+                    if puntosBanca > 21 or puntosJugador > puntosBanca:
+                        jugador.Juegos[2][1] = jugador.Juegos[2][1] + 1
+                        animacion(jugador.Nombre,"ganaste","gano")
+                    elif puntosBanca > puntosJugador:
+                        jugador.Juegos[2][2] = jugador.Juegos[2][2] + 1
+                        animacion(jugador.Nombre,"perdiste","perdio")
+                    else:
+                        print("Empate")
+                
+                cerrar = cerrarJuego(jugador.Nombre,"Black Jack")
+                if cerrar == "n":
+                    mensajeAnimado("Saliendo", rojoError)
+                else:
+                    limpiarPantalla()
+            else: 
+                print(f"\n{rojoNormal}No tiene mas credito para jugar.{cerrarColor}")
+                continuar()
+                mensajeAnimado("saliendo", rojoIntenso)
+                cerrar = "n"
+                
         guardar(jugador, posicion)
 
        
@@ -1392,48 +1437,50 @@ def juego4():
 
     limpiarPantalla()
 
-    print(f"{azul}\nPar o Impar{cerrarColor}")
+    print(f"{azul}Par o Impar{cerrarColor}")
     
     cerrar = cerrarJuego("", "Par o Impar")
     if(cerrar == "n"): 
         mensajeAnimado("saliendo", rojoIntenso)
     
     else: 
+        limpiarPantalla()
+        print(f"{azul}Par o Impar{cerrarColor}")
         posicion = iniciarJuego()
         archivoLogJug.seek(posicion, 0)
         jugador = pickle.load(archivoLogJug)
         desformatearJug(jugador)
-        print(f"{amarillo}Hola!: {jugador.Nombre}{cerrarColor}")
-        input(f"----dale enter para iniciar la partida----")
+        print(f"{amarillo}\n Hola!: {jugador.Nombre}{cerrarColor} \n")
+        continuar()
                 
 
         while (cerrar != "n"):
             limpiarPantalla()
-            jugador.Juegos[3][0] = jugador.Juegos[3][0] + 1
+            print(f"{azul}Par o Impar{cerrarColor}")
+            
             creditoActual = jugador.Creditos
             
             
 
             if creditoActual > 0.0:
-                        
-                
-               
+                jugador.Juegos[3][0] = jugador.Juegos[3][0] + 1
                 numero1 = int(aleatorio.randint(1, 6))
                 numero2 = int(aleatorio.randint(1, 6))
                 suma = numero1 + numero2
                 par = suma % 2
 
                
-                apuesta = validarCredito(creditoActual)
-                mensajeAnimado(f"tirando dados", azul)
+                apuesta = validarCredito(creditoActual, jugador.Nombre)
+                mensajeAnimado(f"\n tirando dados", azul)
 
+
+                limpiarPantalla()
+                print(f"{azul}Par o Impar{cerrarColor}")
                 pregunta = str(input(f"{azul}\n\nDecir si es Par o Impar: {cerrarColor}")).lower().strip()
                 while(pregunta != "par" and pregunta != "impar"):
                     pregunta = str(input(f"{rojoError}\nError - Ingrese nuevamente:{cerrarColor} ")).lower().strip()
 
-
-
-
+                
                 if (pregunta == "par"):
                     if (par == 0):
                         print(f"\n{verde}Ganaste!!! - La suma de los dados es {suma}.{cerrarColor}")
@@ -1446,6 +1493,7 @@ def juego4():
                         animacion(jugador.Nombre, " perdiste !!!!", "perdio")
                         jugador.Juegos[3][2] = jugador.Juegos[3][2] + 1
                         jugador.Creditos = jugador.Creditos - apuesta
+                
                        
                 elif (pregunta == "impar"):
                     if (par == 1):
@@ -1453,13 +1501,14 @@ def juego4():
                         animacion(jugador.Nombre, " ganaste !!!!", "gano")
                         jugador.Juegos[3][1] = jugador.Juegos[3][1] + 1
                         jugador.Creditos = jugador.Creditos + apuesta
+                
                         
                     else:
                         print(f"\n{rojoNormal}Perdiste!!! - La suma de los dados es {suma}.{cerrarColor}")
                         animacion(jugador.Nombre, " perdiste !!!!", "perdio")
                         jugador.Juegos[3][2] = jugador.Juegos[3][2] + 1
                         jugador.Creditos = jugador.Creditos - apuesta
-                        
+                                
                     
                 cerrar = cerrarJuego(jugador.Nombre, "Par e Impar")
                 if cerrar == "n":
@@ -1468,6 +1517,7 @@ def juego4():
                     limpiarPantalla()
             else:
                 print(f"\n{rojoNormal}No tiene mas credito para jugar.{cerrarColor}")
+                continuar()
                 mensajeAnimado("saliendo", rojoIntenso)
                 cerrar = "n"
         guardar(jugador, posicion)
@@ -1622,25 +1672,33 @@ def mostrarJugador():
                     time.sleep(3)
         
     
-def menuReporte(): 
-        limpiarPantalla()
-        print(f"{rosa}REPORTE{cerrarColor}")
-        print(f"{verde}a. Lista de jugadores{cerrarColor}")
-        print(f"{amarillo}b. Buscar jugador{cerrarColor}")
-        print(f"{rojoNormal}c. volver{cerrarColor}")
-        
+
+def menuReporte():
+    limpiarPantalla()
+
+    print(f"{amarillo}╔══════════════════════════════════════════╗{cerrarColor}")
+    print(f"{amarillo}║              📊 REPORTE 📊               ║{cerrarColor}")
+    print(f"{amarillo}╠══════════════════════════════════════════╣{cerrarColor}")
+    print(f"{verde}║  [A]  👥 Lista de jugadores              ║{cerrarColor}")
+    print(f"{azul}║  [B]  🔍 Buscar jugador                  ║{cerrarColor}")
+    print(f"{rojoNormal}║  [C]  ↩  Volver                          ║{cerrarColor}")
+    print(f"{amarillo}╚══════════════════════════════════════════╝{cerrarColor}")
+
 def reporte(): 
     op = ""
     while op != "c": 
         menuReporte()
         op = input("ingresa una opcion: ")
         if op == "a": 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             limpiarPantalla()
             listarJugadores()
         elif(op == "b"): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             limpiarPantalla()
             mostrarJugador()
         elif(op == "c"): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             mensajeAnimado("Saliendo", rojoError)
 
 
@@ -1710,20 +1768,27 @@ def menu():
         menuop()
         opcion1 = str(input("ingrese una opcion: ")).upper()
         if(opcion1 == "A"): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             limpiarPantalla()
             juego1()
         elif(opcion1 == "B"): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             juego2()
         elif(opcion1 == "C"): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             juego3()
         elif(opcion1 == "D"): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             juego4()
         elif(opcion1 == "E"): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             reporte()
         elif(opcion1 == "F"): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             limpiarPantalla()
             verificar(contrasena)
         elif(opcion1 == "G"): 
+            winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             # mensajeAnimado("cerrando sesion", rojoIntenso)
             archivoLogOpc.close()
             archivoLogCat.close()
