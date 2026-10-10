@@ -36,6 +36,7 @@ class categorias:
         self.NombreCategoria = ""
         self.Pregunta = ""
         self.Estado = ""
+        self.Tipo = 0
 
 class opciones: 
     def __init__(self):
@@ -53,11 +54,8 @@ class jugadores:
 
 def continuar():
     enter = str(input(f"{blanco}--- Presiona ENTER para continuar ---{cerrarColor}"))
-
     while enter != "":
-   
        enter = str(input(f"{blanco}--- Presiona ENTER para continuar ---{cerrarColor}"))
-
 
 
 def validarCodigo(): 
@@ -299,7 +297,9 @@ def crearCategoria(nombreCat):
     nuevaCategoria.NombreCategoria = nombreCat
     nuevaCategoria.Estado = "A"
     preguntaCategoria = str(input(f"{azul}ingrese una pregunta para la categoria: {cerrarColor}"))
+    tipoCategoria = int(input("ingrese el tipo de categoria 1.mayor 2.menor"))
     nuevaCategoria.Pregunta = preguntaCategoria
+    nuevaCategoria.Tipo = tipoCategoria
     formatearCat(nuevaCategoria)
     archivoLogCat.seek(0, 2)
     pickle.dump(nuevaCategoria, archivoLogCat)
@@ -450,19 +450,19 @@ def bajaCategoria():
                         archivoLogCat.flush()
 
                         print(f"{verde}categoria dada de baja correctamente!{cerrarColor}")
-                        time.sleep(2)
+                        continuar()
 
                     else: 
                         print(f"{rojoIntenso}cancelado{cerrarColor}")
-                        time.sleep(2)
+                        continuar()
 
                 else:
                     print(f"{rojoIntenso}la categoria ya se encuentra dada de baja!{cerrarColor}")
-                    time.sleep(2)
+                    continuar()
 
             else: 
                 print(f"{rojoIntenso}ingrese un numero de categoria valido!{cerrarColor}")
-                time.sleep(2)
+                continuar()
             limpiarPantalla()
             print(f"{amarillo}BAJAS DE CATEGORIAS{cerrarColor}")
             listarCategorias()
@@ -612,6 +612,7 @@ def altaOpcion():
     if(t == 0): 
         print(f"{rojoNormal}aun no hay categorias cargadas...{cerrarColor}")
         continuar()
+        
     else: 
         
         listarCategorias()
@@ -822,12 +823,12 @@ def obtenerOpciones(numeroC, arrOp):
                 i += 1
             else:
                 posicion = aleatorio.randint(0, cantidad - 1)
-
+                
                 if posicion < 6:
                     arrOp[posicion] = opcion
-
+                    
+                    
     return i
- 
         
     
            
@@ -898,9 +899,7 @@ def menuCategorias():
             print()
             print(f"{rojoError}Opción inválida. Seleccione nuevamente.{cerrarColor}")
             opcion = int(input(f"{rosa}Seleccione una categoría: {cerrarColor}"))
-
         resultado = elegirCategoria(opcion)
-
         return resultado
 
 
@@ -933,17 +932,15 @@ def juego1():
                
                 creditoActual = jugador.Creditos
                 if(creditoActual > 0.0):
-                       
+                        
                         credito = validarCredito(creditoActual)
                         numeroC = menuCategorias()
                         if(numeroC == -1): 
                            cerrar = "n"
                            continuar()
                         else: 
-                           
                             opcionesDeCat = array(None, 6)
-                
-                            cantidadOpciones = obtenerOpciones(numeroC, opcionesDeCat)
+                            cantidadOpciones = obtenerOpciones(numeroC, opcionesDeCat)                    
                             jugar = "s"
                             while cantidadOpciones < 6 and jugar != "n": 
                                 limpiarPantalla()
@@ -962,7 +959,6 @@ def juego1():
                                 archivoLogCat.seek(posCat, 0)
                                 categoriaAct = pickle.load(archivoLogCat)
                                 desformatearCat(categoriaAct)
-                                
                                 posicion1 = aleatorio.randint(0, 5)
                                 campeon = opcionesDeCat[posicion1]
                                 opcionesDeCat[posicion1] = None
@@ -994,15 +990,23 @@ def juego1():
                                                     eleccion = int(input(f"{rojoError}Opción inválida. Ingresa 1 o 2: {cerrarColor}"))
                                     
                                                 
-                                                if campeon.valor >= retador.valor:
-                                    
-                                                    ganadorReal = campeon
-                                                    opcionCorrecta = 1
-                                    
+                                                if categoriaAct.Tipo == 1:
+
+                                                    if campeon.valor >= retador.valor:
+                                                        ganadorReal = campeon
+                                                        opcionCorrecta = 1
+                                                    else:
+                                                        ganadorReal = retador
+                                                        opcionCorrecta = 2
+
                                                 else:
-                                    
-                                                    ganadorReal = retador
-                                                    opcionCorrecta = 2
+
+                                                    if campeon.valor <= retador.valor:
+                                                        ganadorReal = campeon
+                                                        opcionCorrecta = 1
+                                                    else:
+                                                        ganadorReal = retador
+                                                        opcionCorrecta = 2
                                     
                                                 print()
                                                 print(f"{amarillo}--- Resultado ---{cerrarColor}")
@@ -1055,7 +1059,6 @@ def juego1():
                             input(f"{blanco}---presiona enter para salir---{cerrarColor}")
                             mensajeAnimado("saliendo", rojoIntenso)
                             cerrar = "n"
-        
         guardar(jugador, posicion)
         
 def juego2(): 
