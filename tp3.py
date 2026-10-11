@@ -1,5 +1,54 @@
 import pickle, os, random as aleatorio, time, getpass, winsound
 
+"""
+integrantes: Alexander Panasiuk, Cristian la Spina, Tobias Carbonel, Emanuel Caceres
+"""
+"""
+type 
+matrixCol4: array[0..10, 0..3] of integer
+matrixCol3: array[0..10, 0..2] of integer
+matrixCol8: array[0..6, 0..7] of integer
+matrixCol2: array[0..52, 0..1] of integer
+matrixCol2BJ: array[0..7, 0..1] of integer
+
+arreglos: array[0..10] of string
+arreglos10: array[0..10] of integer
+arreglos4: array[0..3] of integer
+arreglos7: array[0..7] of string
+arreglos2: array[0..1] of integer
+"""
+
+"""
+var: palos: arreglos4
+     dibujo: arreglos7
+     carta1: arreglos2
+     carta2: arreglos2
+     carta: arreglos2
+     nomPeiOrd: arreglos
+     creditoList: arreglos10
+     nombrePeI: arreglos
+     nombreMoM: arreglos
+     nombreNs: arreglos
+     nombreBla: arreglos
+
+     cartas: matrixCol8
+     mazo: matrixCol2
+     cBanca: matrixCol2BJ
+     cJugador: matrixCol2BJ
+     tablaMoM: matrixCol4
+     tablaNs: matrixCol3
+     tablaPeI: matrixCol4
+     tablaBla: matrixCol3
+"""
+
+"""
+var: indexMoM, indexNs, indexPeI, indexBla, index, pos, numAle1, numAle2, numeroSec, intentos, numero, fila, tamaño, aux, posicion, i, puntos, ases, valor, palo, puntosJugador, puntosBanca, jugados, ganados, perdidos, suma, par, numero1, numero2, apuesta, posMoM, posNs, posPoI, posBj: integer
+
+var: negro, blanco, texto, nombre, jugador, respuesta, simbolo, colorCarta, linea, pregunta, aux1, cartel, rojoError,
+rosa, cerrarColor, amarillo, violeta, purpura, azul, rojoNormal, rojoIntenso: string
+
+var: opc, cerrar, opcion, preguntar, continuar, reintento:char
+"""
 
 
 def color():
