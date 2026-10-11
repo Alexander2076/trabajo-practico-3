@@ -768,7 +768,7 @@ def altaOpcion():
                 categoria = pickle.load(archivoLogCat)
                 desformatearCat(categoria)
                 if(categoria.Estado == "A"):
-
+                    limpiarPantalla()
                     print(f"{azul}categoria: {categoria.NombreCategoria} {cerrarColor}")
                     print(f"{amarillo}Pregunta: ¿{categoria.Pregunta}? {cerrarColor}")
 
