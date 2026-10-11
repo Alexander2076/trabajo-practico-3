@@ -69,6 +69,17 @@ def validarCodigo():
             entrada = input("ingrese un numero de categoria o (0) para salir: ")
     return numeroC
         
+def validarOpcion(): 
+    entrada = input("ingrese una opcion: ")
+    opcion = -1
+    while opcion == -1:
+        try:
+            opcion = int(entrada)
+        except ValueError:
+            print(f"{rojoIntenso}Ingresa una opcion correcta!{cerrarColor}")
+            entrada = input("ingrese una opcion: ")
+    return opcion
+        
 
 def formatearJug(rJugador):
     rJugador.Nombre = rJugador.Nombre.ljust(30, " ")
@@ -223,7 +234,12 @@ def iniciarJuego():
     print(f"{amarillo}║          INGRESAR NOMBRE          {amarillo}   ║{cerrarColor}")
     print(f"{amarillo}╚══════════════════════════════════════╝{cerrarColor}")
 
-    nombre = input(f"{amarillo}  ➜  {cerrarColor}")
+    nombre = str(input(f"{amarillo}  ➜  {cerrarColor}")).strip()
+    while(nombre == "" or len(nombre) < 3):
+       print(f"{rojoIntenso} Ingresa un nombre valido! {cerrarColor}")
+       nombre = str(input(f"{amarillo}  ➜  {cerrarColor}")).strip()
+
+        
     posicion = buscarJugador(nombre)
     if (posicion == -1): 
         posicion = crearJugador(nombre)
@@ -530,7 +546,7 @@ def admCategorias():
     opcion3 = 0
     while opcion3 != 4: 
         submenu2()
-        opcion3 = int(input("ingrese una opcion: "))
+        opcion3 = validarOpcion()
         if(opcion3 == 1): 
             winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             limpiarPantalla()
@@ -545,7 +561,7 @@ def admCategorias():
             bajaCategoria()
         elif(opcion3 == 4): 
             winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
-            mensajeAnimado("saliendo", rojoError)
+            mensajeAnimado("saliendo", rojoIntenso)
         else: 
             print(f"{rojoIntenso}ingrese una opcion valida...{cerrarColor}")
 
@@ -750,7 +766,7 @@ def admOpciones():
     opcion4 = 0
     while opcion4 != 3: 
         submenu3()
-        opcion4 = int(input("ingrese una opcion: "))
+        opcion4 = validarOpcion()
         if(opcion4 == 1): 
             winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             limpiarPantalla()
@@ -761,16 +777,17 @@ def admOpciones():
             consultaCat()
         elif(opcion4 == 3): 
             winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
-            mensajeAnimado("Saliendo", rojoError)
+            mensajeAnimado("saliendo", rojoIntenso)
         else: 
-            print("ingrese una opcion valida...")
+            print(f"{rojoIntenso}ingrese una opcion valida...{cerrarColor}")
+            time.sleep(2)
 
 def administracion(): 
     print("administraciòn")
     opcion2 = 0
     while opcion2 != 3: 
         submenu1()
-        opcion2 = int(input("ingrese una opcion: "))
+        opcion2 = validarOpcion()
         if(opcion2 == 1): 
             winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             admCategorias()
@@ -779,9 +796,11 @@ def administracion():
             admOpciones()
         elif (opcion2 == 3): 
             winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
-            mensajeAnimado("saliendo", rojoError)
+            mensajeAnimado("saliendo", rojoIntenso)
         else: 
-            print("ingrese una opcion valida! ")
+            print(f"{rojoIntenso}ingrese una opcion valida...{cerrarColor}")
+            time.sleep(2)
+            
             
             
 def verificar(c):
@@ -916,10 +935,16 @@ def menuCategorias():
 
     
 def validarCredito(creditoAc, nombre): 
-    
-    credito = float(input(f"{azul} \n {nombre} ¿Cuanto credito quieres apostar? tu credito actual es de ${creditoAc}: {cerrarColor}"))
-    while(credito < 1 or credito > creditoAc): 
-         credito = float(input(f"{rojoIntenso} \n Credito invalido! tu credito actual es de ${creditoAc}: {cerrarColor}"))
+
+    credito = -1
+    while credito < 1 or credito > creditoAc:
+        try:
+            credito = float(input(f"{azul} \n {nombre} ¿Cuánto crédito quieres apostar? Tu crédito actual es de ${creditoAc}: {cerrarColor}"))
+            if credito < 1 or credito > creditoAc:
+                print(f"{rojoIntenso}¡Crédito inválido!{cerrarColor}")
+        except ValueError:
+            print(f"{rojoIntenso}\n ¡Vuelve a ingresar tu credito!{cerrarColor}")
+            credito = -1
     winsound.PlaySound("sonidos/registrar-pago.wav", winsound.SND_ASYNC)
     time.sleep(2)
     return credito
@@ -948,7 +973,7 @@ def juego1():
                 print(f"{amarillo}Mayor o Menor{cerrarColor}")
                 creditoActual = jugador.Creditos
                 if(creditoActual > 0.0):
-                        credito = validarCredito(creditoActual, jugador.Nombre)
+                        apuesta = validarCredito(creditoActual, jugador.Nombre)
                         numeroC = menuCategorias()
                         if(numeroC == -1): 
                            cerrar = "n"
@@ -1058,11 +1083,11 @@ def juego1():
                                 
                                 if(aciertos >= 4): 
                                         animacion(jugador.Nombre, "ganaste!", "gano")
-                                        jugador.Creditos = creditoActual + credito
+                                        jugador.Creditos = creditoActual + apuesta
                                         jugador.Juegos[0][1] = jugador.Juegos[0][1] + 1
                                 else: 
                                         animacion(jugador.Nombre, "perdiste", "perdio")
-                                        jugador.Creditos = creditoActual - credito
+                                        jugador.Creditos = creditoActual - apuesta
                                         jugador.Juegos[0][2] = jugador.Juegos[0][2] + 1
                                 cerrar = cerrarJuego(jugador.Nombre, "Mayor o Menor")
                                 if cerrar == "n":
@@ -1101,6 +1126,7 @@ def juego2():
             creditoActual = jugador.Creditos
             if(creditoActual > 0.0):
                 jugador.Juegos[1][0] = jugador.Juegos[1][0] + 1
+                apuesta = validarCredito(creditoActual, jugador.Nombre)
                 numeroSec = int(aleatorio.randint(1, 100))
                 intentos = 6
                 
@@ -1108,14 +1134,16 @@ def juego2():
                     limpiarPantalla()
                     print(f"{rosa}Numero Secreto{cerrarColor}")
                     
-                    try:
-                        numero = int(input(f"\n{rosa}Ingrese un numero del 1 al 100 - Te quedan {intentos} intentos.{cerrarColor}  "))
-                    except ValueError:
-                        print(f"{rojoError}\nError - Ingrese un numero correcto:{cerrarColor} ")
-                        continue
-                    
-                    while (numero <= 0 or numero > 100):
-                        numero = int(input(f"{rojoError}\nError - Ingrese un valor correcto:{cerrarColor} ").isdigit())
+                    numero = 0
+                    while numero <= 0 or numero > 100:
+                        try:
+                            numero = int(input(f"\n{rosa}Ingrese un numero del 1 al 100 - Te quedan {intentos} intentos.{cerrarColor}  "))
+                            if numero <= 0 or numero > 100:
+                                print(f"{rojoError}\nError - Ingrese un valor entre 1 y 100:{cerrarColor}")
+                        except ValueError:
+                            print(f"{rojoError}\nError - Ingrese un numero correcto:{cerrarColor}")
+                            numero = 0
+
 
                     if (numero > numeroSec):
                         print(f"{rojoNormal}\nES MENOR\n{cerrarColor}")
@@ -1127,14 +1155,16 @@ def juego2():
                         continuar()
                     else:
                         print(f"{verde}\nAcertaste el numero es {numeroSec} en el intento - {6 - intentos}.{cerrarColor}")
-                        animacion(jugador.nombre, "acertaste!", "gano")
+                        animacion(jugador.Nombre, "acertaste!", "gano")
                         jugador.Juegos[1][1] = jugador.Juegos[1][1] + 1
+                        jugador.Creditos = jugador.Creditos + apuesta
                         numeroSec = 0
                         
                     if(intentos == 0):
                         print(f"{rojoNormal}\nPerdiste el juego. El numero secreto era {numeroSec}.{cerrarColor}")
                         animacion(jugador.Nombre, "Perdiste!!!", "perdio")
                         jugador.Juegos[1][2] = jugador.Juegos[1][2] + 1
+                        jugador.Creditos = jugador.Creditos - apuesta
                     
                     
                 cerrar = cerrarJuego(jugador.Nombre, "Numero Secreto")
@@ -1390,6 +1420,7 @@ def juego3():
             creditoActual = jugador.Creditos
             if creditoActual > 0.0:
                 jugador.Juegos[2][0] = jugador.Juegos[2][0] + 1
+                apuesta = validarCredito(creditoActual, jugador.Nombre)
                 mazo = matriz(52,2,0)
                 crearMazo(mazo)
                 mezclarMazo(mazo)
@@ -1402,6 +1433,7 @@ def juego3():
                 puntosJugador = turnoJugador(cJugador,cBanca,mazo)
                 if puntosJugador > 21:
                     jugador.Juegos[2][2] = jugador.Juegos[2][2] + 1
+                    jugador.Creditos = jugador.Creditos - apuesta
                     animacion(jugador.Nombre,"te pasaste de 21","perdio")
                 else:
                     puntosBanca = turnoBanca(cBanca,cJugador,mazo)
@@ -1409,16 +1441,17 @@ def juego3():
                     print(f"\n{azul}Banca: {puntosBanca} {cerrarColor}")
                     if puntosBanca > 21 or puntosJugador > puntosBanca:
                         jugador.Juegos[2][1] = jugador.Juegos[2][1] + 1
+                        jugador.Creditos = jugador.Creditos + apuesta
                         animacion(jugador.Nombre,"ganaste","gano")
                     elif puntosBanca > puntosJugador:
                         jugador.Juegos[2][2] = jugador.Juegos[2][2] + 1
+                        jugador.Creditos = jugador.Creditos - apuesta
                         animacion(jugador.Nombre,"perdiste","perdio")
                     else:
                         print("Empate")
-                
                 cerrar = cerrarJuego(jugador.Nombre,"Black Jack")
                 if cerrar == "n":
-                    mensajeAnimado("Saliendo", rojoError)
+                    mensajeAnimado("Saliendo", rojoIntenso)
                 else:
                     limpiarPantalla()
             else: 
@@ -1464,13 +1497,13 @@ def juego4():
 
             if creditoActual > 0.0:
                 jugador.Juegos[3][0] = jugador.Juegos[3][0] + 1
+                apuesta = validarCredito(creditoActual, jugador.Nombre)
                 numero1 = int(aleatorio.randint(1, 6))
                 numero2 = int(aleatorio.randint(1, 6))
                 suma = numero1 + numero2
                 par = suma % 2
 
                
-                apuesta = validarCredito(creditoActual, jugador.Nombre)
                 mensajeAnimado(f"\n tirando dados", azul)
 
 
@@ -1699,7 +1732,7 @@ def reporte():
             mostrarJugador()
         elif(op == "c"): 
             winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
-            mensajeAnimado("Saliendo", rojoError)
+            mensajeAnimado("saliendo", rojoIntenso)
 
 
 
