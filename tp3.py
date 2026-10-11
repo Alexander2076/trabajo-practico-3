@@ -4,51 +4,84 @@ import pickle, os, random as aleatorio, time, getpass, winsound
 integrantes: Alexander Panasiuk, Cristian la Spina, Tobias Carbonel, Emanuel Caceres
 """
 """
-type 
-matrixCol4: array[0..10, 0..3] of integer
-matrixCol3: array[0..10, 0..2] of integer
-matrixCol8: array[0..6, 0..7] of integer
-matrixCol2: array[0..52, 0..1] of integer
-matrixCol2BJ: array[0..7, 0..1] of integer
+type:
+
 
 arreglos: array[0..10] of string
-arreglos10: array[0..10] of integer
-arreglos4: array[0..3] of integer
-arreglos7: array[0..7] of string
-arreglos2: array[0..1] of integer
 """
 
 """
-var: palos: arreglos4
+type: 
+matrizJuegos: array[0..3, 0..2] of integer
+matrizCol3: array[0..10, 0..2] of integer
+matrizCol8: array[0..6, 0..7] of integer
+matrizCol2: array[0..52, 0..1] of integer
+matrizCol2BJ: array[0..7, 0..1] of integer
+"""
+
+
+"""
+var: 
+     juegos: matrixJuegos
+     palos: arreglos4
      dibujo: arreglos7
      carta1: arreglos2
      carta2: arreglos2
      carta: arreglos2
-     nomPeiOrd: arreglos
-     creditoList: arreglos10
-     nombrePeI: arreglos
-     nombreMoM: arreglos
-     nombreNs: arreglos
-     nombreBla: arreglos
-
-     cartas: matrixCol8
-     mazo: matrixCol2
-     cBanca: matrixCol2BJ
-     cJugador: matrixCol2BJ
-     tablaMoM: matrixCol4
-     tablaNs: matrixCol3
-     tablaPeI: matrixCol4
-     tablaBla: matrixCol3
+     cartas: matrizCol8
+     mazo: matrizCol2
+     cBanca: matrizCol2BJ
+     cJugador: matrizCol2BJ
 """
 
 """
-var: indexMoM, indexNs, indexPeI, indexBla, index, pos, numAle1, numAle2, numeroSec, intentos, numero, fila, tamaño, aux, posicion, i, puntos, ases, valor, palo, puntosJugador, puntosBanca, jugados, ganados, perdidos, suma, par, numero1, numero2, apuesta, posMoM, posNs, posPoI, posBj: integer
-
-var: negro, blanco, texto, nombre, jugador, respuesta, simbolo, colorCarta, linea, pregunta, aux1, cartel, rojoError,
-rosa, cerrarColor, amarillo, violeta, purpura, azul, rojoNormal, rojoIntenso: string
-
-var: opc, cerrar, opcion, preguntar, continuar, reintento:char
+var:
+    numeroC, opcion, NroCategoria, NroOpcion, valor,
+    Tipo, contador, t, pos, posicion, tamCat,
+    cantidadC, inferior, superior, medio, nroCat,
+    opcion2, opcion3, opcion4, nroOpcion,
+    intentos, numeroSec, numero, cantidad,
+    fila, tamaño, aux, i, j, columna,
+    puntos, ases, valorCarta, palo, puntosJugador,
+    puntosBanca, creditoActual, aciertos, eleccion,
+    opcionCorrecta, suma, par, numero1, numero2,
+    apuesta, cantReg, tamArch, tamReg, resultado,
+    posicion1, posicion2, cantidadOpciones: integer
 """
+"""
+var:
+    Creditos, credito, creditoAc, apuesta: float
+"""
+"""
+var:
+    negro, blanco, texto, nombre, jugador, respuesta,
+    simbolo, colorCarta, linea, pregunta, aux1, cartel,
+    rojoError, rosa, cerrarColor, amarillo, violeta,
+    purpura, azul, rojoNormal, rojoIntenso, verde,
+    fondoVerde, entrada, enter, cerrar, correcto,
+    contIngresada, nombreC, nombreCat, preguntaCategoria,
+    tipoCategoria, nuevoNombre, confirmar, seguir,
+    objeto, mensaje, color, resultado, opcion1,
+    op, contrasena, valorCarta, valor, estado,
+    Nombre, NombreCategoria, Pregunta, Estado,
+    dibujo, archivoFisJug, archivoFisCat, archivoFisOpc: string
+"""
+"""
+var:
+    categoria, nuevaCategoria, categoriaAct: categorias
+    opcion, rOpcion: opciones
+    jugador, nuevoJugador, rJugador: jugadores
+"""
+"""
+var:
+    archivoFisJug, archivoFisCat, archivoFisOpc, archivoLogJug, archivoLogCat,
+    archivoLogOpc: archivos
+"""
+"""
+var:
+    opc, cerrar, opcion1: char
+"""
+
 
 
 def color():
@@ -267,7 +300,7 @@ def crearJugador(nombre):
     global archivoLogJug
     nuevoJugador = jugadores()
     nuevoJugador.Nombre = nombre
-    nuevoJugador.Creditos = 10000
+    nuevoJugador.Creditos = float(10000)
     formatearJug(nuevoJugador)
     archivoLogJug.seek(0, 2)
     posicion = archivoLogJug.tell()
@@ -306,10 +339,10 @@ def busCategoria(nombreC):
     if t>0:
             categoria = pickle.load(archivoLogCat)
             desformatearCat(categoria)
-            while (archivoLogCat.tell()<t) and categoria.NombreCategoria != nombreC:
+            while (archivoLogCat.tell()<t) and categoria.NombreCategoria.lower() != nombreC.lower():
                 categoria = pickle.load(archivoLogCat)
                 desformatearCat(categoria)
-            if categoria.NombreCategoria == nombreC:        
+            if categoria.NombreCategoria.lower() == nombreC.lower():        
                 return 1
             else:
                  return -1
@@ -383,7 +416,7 @@ def crearCategoria(nombreCat):
     
 def validarNombreCat(): 
     nombreCat = str(input("ingrese el nombre de la categoria o (*) para salir: ")).strip()
-    while (len(nombreCat) < 3 or len(nombreCat) > 30 or nombreCat == ""): 
+    while ((len(nombreCat) < 3 or len(nombreCat) > 30 or nombreCat == "" ) and nombreCat !="*"): 
             print(f"{rojoIntenso} Ingresa un nombre valido! {cerrarColor}")
             nombreCat = str(input("ingrese el nombre de la categoria o (*) para salir: ")).strip()
     return nombreCat
@@ -430,7 +463,12 @@ def listarCategorias():
 
     print("\033[1;36m══════════════════════════════════════════════\033[0m")
  
-
+def validarNombreCat2(): 
+    nuevoNombre = str(input(f"{azul}ingresa el nuevo nombre para la categoria: {cerrarColor}")).strip()
+    while(len(nuevoNombre) < 4 or len(nuevoNombre) > 30 or nuevoNombre == ""): 
+            print(f"{rojoIntenso} Ingresa un nombre valido! {cerrarColor}")
+            nuevoNombre = str(input(f"{azul}ingresa el nuevo nombre para la categoria: {cerrarColor}")).strip()
+    return nuevoNombre
 
 
 def modificarCategoria(): 
@@ -457,13 +495,14 @@ def modificarCategoria():
                 desformatearCat(categoria)
                 if categoria.Estado == "A":
 
-                    nuevoNombre = str(input(f"{azul}ingresa el nuevo nombre para la categoria: {cerrarColor}")).strip()
-                    while(len(nuevoNombre) < 4 or len(nuevoNombre) > 30 or nuevoNombre == ""): 
-                        print(f"{rojoIntenso} Ingresa un nombre valido! {cerrarColor}")
-                        nuevoNombre = str(input(f"{azul}ingresa el nuevo nombre para la categoria: {cerrarColor}")).strip()
-                    confirmar = str(input("estas seguro que desea modificar la categoria? S / N: ")).upper()
-                    while confirmar != "N" and confirmar != "S":
-                        confirmar = str(input("estas seguro que desea modificar la categoria? S / N: ")).upper()
+                    nuevoNombre = validarNombreCat2()
+                    while( busCategoria(nuevoNombre) == 1 ): 
+                        print(f"{rojoIntenso} ese nombre de categoria ya existe, ingresa otro!{cerrarColor}")
+                        nuevoNombre = validarNombreCat2()
+                        
+                    confirmar = str(input("estas seguro que desea modificar la categoria? s / n: ")).lower()
+                    while confirmar != "n" and confirmar != "s":
+                        confirmar = str(input("estas seguro que desea modificar la categoria? s / n: ")).lower()
 
                     if(confirmar == "S"):
                         categoria.NombreCategoria = nuevoNombre
@@ -473,19 +512,19 @@ def modificarCategoria():
                         archivoLogCat.flush()
 
                         print(f"{verde}categoria modificada correctamente!{cerrarColor}")
-                        time.sleep(2)
+                        continuar()
 
                     else: 
                         print(f"{rojoIntenso}cancelado{cerrarColor}")
-                        time.sleep(2)
+                        continuar()
 
                 else:
                     print(f"{rojoIntenso}solo puedes modificar categorias activas!{cerrarColor}")
-                    time.sleep(2)
+                    continuar()
 
             else: 
                 print(f"{rojoIntenso}ingrese un numero de categoria valido!{cerrarColor}")
-                time.sleep(2)
+                continuar()
             limpiarPantalla()
             print(f"{amarillo} MODIFICAR CATEGORIAS {cerrarColor}")
             listarCategorias()
@@ -516,12 +555,12 @@ def bajaCategoria():
 
                 if categoria.Estado.strip() == "A":
 
-                    confirmar = str(input("estas seguro que desea dar de baja a la categoria? S / N: ")).upper()
+                    confirmar = str(input("estas seguro que desea dar de baja a la categoria? s / n: ")).lower()
 
-                    while confirmar != "N" and confirmar != "S":
-                        confirmar = str(input("estas seguro que desea dar de baja a la categoria? S / N: ")).upper()
+                    while confirmar != "n" and confirmar != "s":
+                        confirmar = str(input("estas seguro que desea dar de baja a la categoria? s / n: ")).lower()
 
-                    if(confirmar == "S"):
+                    if(confirmar == "s"):
 
                         categoria.Estado = "I"
 
@@ -660,7 +699,7 @@ def existeObjeto(numeroC, objeto):
         opcion = pickle.load(archivoLogOpc)
         desformatearOpc(opcion)
         if opcion.NroCategoria == numeroC:
-            if opcion.objeto == objeto:
+            if opcion.objeto.lower() == objeto.lower():
                
                 return 1
 
@@ -735,7 +774,7 @@ def altaOpcion():
 
                     nroOpcion = contarOpciones(numeroC)
 
-                    while nroOpcion <= 6:
+                    while nroOpcion <= 7:
 
                         cargarOpcion(numeroC, categoria, nroOpcion)
 
@@ -759,11 +798,11 @@ def altaOpcion():
 
                 else:
                     print(f"{rojoIntenso}esa categoria se encuentra dada de baja.{cerrarColor}")
-                    time.sleep(2)
+                    continuar()
 
             else: 
                 print(f"{rojoIntenso}no existe ese numero de categoria!{cerrarColor}")
-                time.sleep(2)
+                continuar()
             limpiarPantalla()
             print(f"{amarillo}ALTA DE OPCIONES{cerrarColor}")
             listarCategorias()
@@ -786,8 +825,8 @@ def listaropciones(numeroC, regC):
     print(f"  \033[1;93m¿ {regC.Pregunta} ?") 
     print("\033[1;36m═════════════════════════════════════════════════════\033[0m") 
  
-    while archivoLogOpc.tell() < t: 
  
+    while archivoLogOpc.tell() < t: 
         opcion = pickle.load(archivoLogOpc) 
         desformatearOpc(opcion)
         if opcion.NroCategoria == numeroC: 
@@ -832,10 +871,10 @@ def consultaCat():
                   listaropciones(numeroC, categoria)
                 else: 
                     print(f"{rojoIntenso}la categoria esta dada de baja! no te puedo mostrar las opciones.{cerrarColor}")
-                    time.sleep(2)
+                    continuar()
             else: 
                 print(f"{rojoIntenso}no existe esa categoria, ingresa otra!{cerrarColor}")
-                time.sleep(2)
+                continuar()
             limpiarPantalla()
             print(f"{amarillo}CONSULTA DE CATEGORIAS{cerrarColor}")
             listarCategorias()
@@ -883,7 +922,7 @@ def administracion():
             mensajeAnimado("saliendo", rojoIntenso)
         else: 
             print(f"{rojoIntenso}ingrese una opcion valida...{cerrarColor}")
-            time.sleep(2)
+            continuar()
             
             
             
@@ -905,7 +944,7 @@ def verificar(c):
             if(intentos < 3): 
              print(f"{rojoIntenso}✖ contraseña incorrecta, ingresa nuevamente! tienes {3 - intentos} intentos.{cerrarColor}")
              print(f"{amarillo}Tienes {3 - intentos} intentos{cerrarColor}")
-             time.sleep(2)
+             continuar()
              
         else: 
             correcto = "si"
@@ -914,7 +953,7 @@ def verificar(c):
         administracion()
     else: 
         print(f"{rojoIntenso}Superó los 3 intentos de ingresar contraseña, salga e intente nuevamente!{cerrarColor}")
-        time.sleep(3)
+        continuar()
         
 def obtenerOpciones(numeroC, arrOp): 
     global archivoLogOpc, archivoFisOpc
@@ -933,11 +972,11 @@ def obtenerOpciones(numeroC, arrOp):
 
             cantidad += 1
 
-            if cantidad <= 6:
+            if cantidad <= 7:
                 arrOp[i] = opcion
                 i += 1
             else:
-                posicion = aleatorio.randint(0, 5)
+                posicion = aleatorio.randint(0, 6)
                 arrOp[posicion] = opcion      
     return i
         
@@ -1004,15 +1043,21 @@ def menuCategorias():
         print()
         print(f"{azul}{'-' * 45}{cerrarColor}")
 
-        opcion = input(f"{rosa}Seleccione una categoría: {cerrarColor}")
+        opcion = 0
 
-        while opcion < "1" or opcion >= str(contador):
+        while opcion < 1:
+            try:
+                opcion = int(input(f"{rosa}Seleccione una categoría: {cerrarColor}"))
 
-            print(f"{rojoIntenso}Opción inválida. Seleccione nuevamente!.{cerrarColor}")
-            opcion = input(f"{rosa}Seleccione una categoría: {cerrarColor}")
+                if opcion < 1 or opcion > contador:
+                    print(f"{rojoIntenso}Opción inválida. Seleccione nuevamente!.{cerrarColor}")
+
+            except ValueError:
+                print(f"{rojoIntenso}Error: ingrese solamente números.{cerrarColor}")
+                opcion = 0
         
         winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
-        opcion = int(opcion)
+  
         resultado = elegirCategoria(opcion)
         return resultado
 
@@ -1063,10 +1108,10 @@ def juego1():
                            cerrar = "n"
                            continuar()
                         else: 
-                            opcionesDeCat = array(None, 6)
-                            cantidadOpciones = obtenerOpciones(numeroC, opcionesDeCat)                 
+                            opcionesDeCat = array(None, 7)
+                            cantidadOpciones = obtenerOpciones(numeroC, opcionesDeCat)    
                             jugar = "s"
-                            while cantidadOpciones < 6 and jugar != "n": 
+                            while cantidadOpciones < 7 and jugar != "n": 
                                 limpiarPantalla()
                                 print(f"{rojoIntenso}esta categoria no tiene suficientes opciones!{cerrarColor}")
                                 seguir = input("desea legir otra categoria? s / n: ")
@@ -1084,17 +1129,17 @@ def juego1():
                                 archivoLogCat.seek(posCat, 0)
                                 categoriaAct = pickle.load(archivoLogCat)
                                 desformatearCat(categoriaAct)
-                                posicion1 = aleatorio.randint(0, 5)
+                                posicion1 = aleatorio.randint(0, 6)
                                 campeon = opcionesDeCat[posicion1]
                                 opcionesDeCat[posicion1] = None
                                 aciertos = 0
                                 i = 0
-                                while i < 5:
+                                while i < 6:
                                             limpiarPantalla()
                                             print(f"{amarillo}\nMayor o Menor{cerrarColor}\n")                              
                                             print(f"{azul}Categoria: {categoriaAct.NombreCategoria}{cerrarColor}")
                                         
-                                            posicion2 = aleatorio.randint(0, 5)
+                                            posicion2 = aleatorio.randint(0, 6)
                                     
                                             
                                             if opcionesDeCat[posicion2] != None:
@@ -1105,7 +1150,7 @@ def juego1():
                                                 opcionesDeCat[posicion2] = None
                                     
                                                 print()
-                                                print(f"{amarillo}Ronda {i + 1} de 5{cerrarColor}")
+                                                print(f"{amarillo}Ronda {i + 1} de 6{cerrarColor}")
                                     
                                                 print(f" {verde} [1] {campeon.objeto}{cerrarColor}")
                                                 print(f" {verde} [2] {retador.objeto}{cerrarColor}")
@@ -1164,7 +1209,7 @@ def juego1():
                                 print()
                                     
                                 print(f"{amarillo}¡Juego terminado!{cerrarColor}")
-                                print(f"{rosa}Tus aciertos totales: {aciertos} de 5{cerrarColor}")
+                                print(f"{rosa}Tus aciertos totales: {aciertos} de 6{cerrarColor}")
                                 
                                 if(aciertos >= 4): 
                                         animacion(jugador.Nombre, "ganaste!", "gano")
@@ -1428,7 +1473,7 @@ def turnoJugador(cJugador, cBanca, mazo):
         time.sleep(0.5)
         return puntosJugador
     while puntosJugador < 21:
-        pregunta = input("\n¿Deseas pedir carta? (s/n) ").lower().strip()
+        pregunta = input("\n¿Deseas pedir carta? (s/n): ").lower().strip()
         while pregunta != "s" and pregunta != "n":
             pregunta = input(f"{rojoError}\nError - Ingrese nuevamente s/n: {cerrarColor}").lower().strip()
         if pregunta == "n":
@@ -1643,8 +1688,8 @@ def juego4():
 def ordenarPorCreditos():
 
     global archivoFisJug, archivoLogJug
-    archivoLogJug.seek (0, 0)
     tamArch = os.path.getsize(archivoFisJug)
+    archivoLogJug.seek (0, 0)
 
     aux = pickle.load(archivoLogJug)
     tamReg = archivoLogJug.tell() 
@@ -1786,11 +1831,14 @@ def mostrarJugador():
                     mostrarEstadisticas(pos)
                 else: 
                     print(f"{rojoIntenso}no se encontro el jugador, ingresa uno valido!{cerrarColor}")
-                    time.sleep(3)
+                    continuar()
+            else: 
+                mensajeAnimado("saliendo", rojoIntenso)
         
     
 
 def menuReporte():
+    
     limpiarPantalla()
 
     print(f"{amarillo}╔══════════════════════════════════════════╗{cerrarColor}")
@@ -1817,6 +1865,10 @@ def reporte():
         elif(op == "c"): 
             winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             mensajeAnimado("saliendo", rojoIntenso)
+        else: 
+            print(f"{rojoIntenso}Ingrese una opcion valida!{cerrarColor}")
+            continuar()
+        
 
 
 
@@ -1849,20 +1901,13 @@ def cartel():
         print("\033[H", end="")
         print(color + cartel + cerrarColor)
         time.sleep(0.2)
-        
-
-
-          
-    
-    continuar = str(input("Ingrese ENTER para entrar".center(50, "-")))
-    while(continuar != ""): 
-        continuar = str(input(f"{rojoError}Error - Ingrese ENTER para entrar{cerrarColor}".center(50, "-"))) 
+    continuar()
 
 def despedida():
     limpiarPantalla()
     print(f"""{rojoIntenso}
     ╔════════════════════════════════════════════╗
-    ║              🎰 CASINO ROYAL 🎰           ║
+    ║              🎰 CASINO ROYAL 🎰            ║
     ║                                            ║
     ║              ¡GRACIAS POR JUGAR!           ║
     ║                                            ║
@@ -1910,6 +1955,9 @@ def menu():
             archivoLogCat.close()
             archivoLogJug.close()
             despedida()
+        else: 
+            print(f"{rojoIntenso}Ingrese una opcion valida!{cerrarColor}")
+            continuar()
 
 
 
