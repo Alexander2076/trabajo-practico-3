@@ -53,9 +53,10 @@ class jugadores:
 
 
 def continuar():
-    enter = str(input(f"{blanco}--- Presiona ENTER para continuar ---{cerrarColor}"))
+    enter = str(input(f"{blanco}--- Presiona ENTER para continuar ---{cerrarColor}")).strip()
     while enter != "":
-       enter = str(input(f"{blanco}--- Presiona ENTER para continuar ---{cerrarColor}"))
+       print(f"{rojoIntenso} presiona solo enter! {cerrarColor}")
+       enter = str(input(f"{blanco}--- Presiona ENTER para continuar ---{cerrarColor}")).strip()
 
 
 def validarCodigo(): 
@@ -150,7 +151,7 @@ def guardar(jugador, posicion):
     archivoLogJug.seek(posicion, 0)
     pickle.dump(jugador, archivoLogJug)
     archivoLogJug.flush()
-    # mensajeAnimado("\nguardando datos", azul)
+
 
 def animacion(jugador, mensaje, resultado):
 
@@ -218,12 +219,10 @@ def crearJugador(nombre):
     nuevoJugador = jugadores()
     nuevoJugador.Nombre = nombre
     nuevoJugador.Creditos = 10000
-    
     formatearJug(nuevoJugador)
     archivoLogJug.seek(0, 2)
     posicion = archivoLogJug.tell()
     pickle.dump(nuevoJugador, archivoLogJug)  
-  
     archivoLogJug.flush()
     return posicion
 
@@ -269,30 +268,34 @@ def busCategoria(nombreC):
                 return -1
 def busCategoriaDic(numeroC): 
     global archivoFisCat, archivoLogCat
-    archivoLogCat.seek(0, 0)
-    aux = pickle.load(archivoLogCat)
-    tamCat = archivoLogCat.tell()
     t = os.path.getsize(archivoFisCat)
-    cantidadC = t // tamCat
-    inferior = 0
-    superior = cantidadC-1
-    medio = (inferior + superior) // 2 					
-    archivoLogCat.seek(medio*tamCat, 0)
-    categoria = pickle.load(archivoLogCat) 	
-    desformatearCat(categoria)				
-    while categoria.NroCategoria != int(numeroC) and (inferior < superior):
-                if int(numeroC) < categoria.NroCategoria:
-                    superior = medio - 1
-                else:
-                    inferior = medio + 1
-                medio = (inferior + superior) // 2 
-                archivoLogCat.seek(medio*tamCat, 0)
-                categoria = pickle.load(archivoLogCat)
-                desformatearCat(categoria)
-    if categoria.NroCategoria == int(numeroC):						
-                return medio*tamCat							
+    if(t == 0): 
+        print(f"{rojoIntenso}no hay categorias cargadas{cerrarColor}")
+        continuar()
     else:
-        return -1
+        archivoLogCat.seek(0, 0)
+        aux = pickle.load(archivoLogCat)
+        tamCat = archivoLogCat.tell()
+        cantidadC = t // tamCat
+        inferior = 0
+        superior = cantidadC-1
+        medio = (inferior + superior) // 2 					
+        archivoLogCat.seek(medio*tamCat, 0)
+        categoria = pickle.load(archivoLogCat) 	
+        desformatearCat(categoria)				
+        while categoria.NroCategoria != int(numeroC) and (inferior < superior):
+                    if int(numeroC) < categoria.NroCategoria:
+                        superior = medio - 1
+                    else:
+                        inferior = medio + 1
+                    medio = (inferior + superior) // 2 
+                    archivoLogCat.seek(medio*tamCat, 0)
+                    categoria = pickle.load(archivoLogCat)
+                    desformatearCat(categoria)
+        if categoria.NroCategoria == int(numeroC):						
+                    return medio*tamCat							
+        else:
+            return -1
     
 
 
@@ -312,8 +315,15 @@ def crearCategoria(nombreCat):
     nuevaCategoria.NroCategoria = nroCat + 1 
     nuevaCategoria.NombreCategoria = nombreCat
     nuevaCategoria.Estado = "A"
-    preguntaCategoria = str(input(f"{azul}ingrese una pregunta para la categoria: {cerrarColor}"))
-    tipoCategoria = int(input("ingrese el tipo de categoria 1.mayor 2.menor"))
+    preguntaCategoria = str(input(f"{azul}ingrese una pregunta para la categoria: {cerrarColor}")).strip()
+    while(len(preguntaCategoria) < 25 or len(preguntaCategoria) > 200 or preguntaCategoria == ""): 
+        print(f"{rojoIntenso} Ingresa una pregunta valida! {cerrarColor}")
+        preguntaCategoria = str(input(f"{azul}ingrese una pregunta para la categoria: {cerrarColor}")).strip()
+    tipoCategoria = input(f"{azul}ingrese el tipo de categoria 1.mayor 2.menor: {cerrarColor}")
+    while tipoCategoria != "1" and tipoCategoria != "2": 
+        print(f"{rojoIntenso} Incorrecto! ingresa 1 o 2 {cerrarColor}")
+        tipoCategoria = input(f"{azul}ingrese el tipo de categoria 1.mayor 2.menor: {cerrarColor}")
+    tipoCategoria = int(tipoCategoria)
     nuevaCategoria.Pregunta = preguntaCategoria
     nuevaCategoria.Tipo = tipoCategoria
     formatearCat(nuevaCategoria)
@@ -322,17 +332,23 @@ def crearCategoria(nombreCat):
     archivoLogCat.flush()
     print(f"{verde}categoria creada correctamente!{cerrarColor}")
     
+def validarNombreCat(): 
+    nombreCat = str(input("ingrese el nombre de la categoria o (*) para salir: ")).strip()
+    while (len(nombreCat) < 3 or len(nombreCat) > 30 or nombreCat == ""): 
+            print(f"{rojoIntenso} Ingresa un nombre valido! {cerrarColor}")
+            nombreCat = str(input("ingrese el nombre de la categoria o (*) para salir: ")).strip()
+    return nombreCat
 
 def altaCategoria():
     print(f"{amarillo} DAR DE ALTA A CATEGORIAS {cerrarColor}")
-    nombreCat = str(input("ingrese el nombre de la categoria o (*) para salir: "))
+    nombreCat = validarNombreCat()
     while  (nombreCat != "*"): 
         resultado = busCategoria(nombreCat)
         if(resultado == -1): 
             crearCategoria(nombreCat)
         else: 
             print(f"{rojoIntenso}esa categoria ya existe! ingresa otro nombre!{cerrarColor}")
-        nombreCat = str(input("ingrese el nombre de la categoria o (*) para salir: "))
+        nombreCat = validarNombreCat()
 
 
 def limpiarPantalla(): 
@@ -392,9 +408,11 @@ def modificarCategoria():
                 desformatearCat(categoria)
                 if categoria.Estado == "A":
 
-                    nuevoNombre = str(input(f"{azul}ingresa el nuevo nombre para la categoria: {cerrarColor}"))
+                    nuevoNombre = str(input(f"{azul}ingresa el nuevo nombre para la categoria: {cerrarColor}")).strip()
+                    while(len(nuevoNombre) < 4 or len(nuevoNombre) > 30 or nuevoNombre == ""): 
+                        print(f"{rojoIntenso} Ingresa un nombre valido! {cerrarColor}")
+                        nuevoNombre = str(input(f"{azul}ingresa el nuevo nombre para la categoria: {cerrarColor}")).strip()
                     confirmar = str(input("estas seguro que desea modificar la categoria? S / N: ")).upper()
-
                     while confirmar != "N" and confirmar != "S":
                         confirmar = str(input("estas seguro que desea modificar la categoria? S / N: ")).upper()
 
@@ -607,13 +625,24 @@ def cargarOpcion(numeroC, categoria, nroOpcion):
     opcion.NroCategoria = categoria.NroCategoria
     opcion.NroOpcion = nroOpcion
 
-    objeto = input("ingrese la opcion para la categoria: ")
+    objeto = input("Ingrese la opcion para la categoria: ").strip()
 
-    while existeObjeto(numeroC, objeto) == 1:
-        print(f"{rojoError}esa opcion ya existe para esta categoria!{cerrarColor}")
-        objeto = input("ingrese otra opcion: ")
-
-    valor = int(input("ingrese el valor para la opcion: "))
+    while objeto == "" or len(objeto) > 100 or existeObjeto(numeroC, objeto) == 1:
+        if objeto == "" or len(objeto) > 100:
+            print(f"{rojoIntenso}Ingrese una opcion valida (1 a 100 caracteres)!{cerrarColor}")
+        else:
+            print(f"{rojoIntenso}Esa opcion ya existe para esta categoria!{cerrarColor}")
+        objeto = input("Ingrese la opcion para la categoria: ").strip()
+        
+    entrada = input("Ingrese el valor para la opcion: ")
+    valor = -1
+    while valor == -1:
+        try:
+            valor = int(entrada)
+        except ValueError:
+            print(f"{rojoIntenso}solamente podes ingresar numeros!!{cerrarColor}")
+            entrada = input("Ingrese el valor para la opcion: ")
+        
 
     opcion.objeto = objeto
     opcion.valor = valor
@@ -663,15 +692,21 @@ def altaOpcion():
 
                         nroOpcion = nroOpcion + 1
                         
-                    seguir = input("desea cargar otra opcion? S/N: ").upper()
+                    seguir = input("desea cargar otra opcion? s/n: ").lower()
+                    while(seguir != "s" and seguir != "n"):
+                        print(f"{rojoIntenso} Ingresa una opcion valida! {cerrarColor}")
+                        seguir = input("desea cargar otra opcion? s/n: ").lower()
 
-                    while seguir == "S":
+                    while seguir == "s":
 
                         cargarOpcion(numeroC, categoria, nroOpcion)
 
                         nroOpcion = nroOpcion + 1
 
-                        seguir = input("desea cargar otra opcion? S/N: ").upper()
+                        seguir = input("desea cargar otra opcion? s/n: ").lower()
+                        while(seguir != "s" and seguir != "n"):
+                            print(f"{rojoIntenso} Ingresa una opcion valida! {cerrarColor}")
+                            seguir = input("desea cargar otra opcion? s/n: ").lower()
 
                 else:
                     print(f"{rojoIntenso}esa categoria se encuentra dada de baja.{cerrarColor}")
@@ -920,15 +955,15 @@ def menuCategorias():
         print()
         print(f"{azul}{'-' * 45}{cerrarColor}")
 
-        opcion = int(input(f"{rosa}Seleccione una categoría: {cerrarColor}"))
+        opcion = input(f"{rosa}Seleccione una categoría: {cerrarColor}")
 
-        while opcion < 1 or opcion >= contador:
-            print()
-            print(f"{rojoError}Opción inválida. Seleccione nuevamente.{cerrarColor}")
-            opcion = int(input(f"{rosa}Seleccione una categoría: {cerrarColor}"))
+        while opcion < "1" or opcion >= str(contador):
+
+            print(f"{rojoIntenso}Opción inválida. Seleccione nuevamente!.{cerrarColor}")
+            opcion = input(f"{rosa}Seleccione una categoría: {cerrarColor}")
         
         winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
-   
+        opcion = int(opcion)
         resultado = elegirCategoria(opcion)
         return resultado
 
@@ -1026,11 +1061,12 @@ def juego1():
                                                 print(f" {verde} [1] {campeon.objeto}{cerrarColor}")
                                                 print(f" {verde} [2] {retador.objeto}{cerrarColor}")
                                     
-                                                eleccion = int(input(f"{rosa}¿{categoriaAct.Pregunta}? (Ingresa 1 o 2): {cerrarColor}"))
+                                                eleccion = input(f"{rosa}¿{categoriaAct.Pregunta}? (Ingresa 1 o 2): {cerrarColor}")
+                                
+                                                while eleccion != "1" and eleccion != "2":
+                                                    eleccion = input(f"{rojoIntenso}Opción inválida!. Ingresa 1 o 2: {cerrarColor}")
                                     
-                                                while eleccion != 1 and eleccion != 2:
-                                                    eleccion = int(input(f"{rojoError}Opción inválida. Ingresa 1 o 2: {cerrarColor}"))
-                                    
+                                                eleccion = int(eleccion)
                                                 
                                                 if categoriaAct.Tipo == 1:
 
@@ -1459,7 +1495,6 @@ def juego3():
                 continuar()
                 mensajeAnimado("saliendo", rojoIntenso)
                 cerrar = "n"
-                
         guardar(jugador, posicion)
 
        
@@ -1800,17 +1835,17 @@ def menu():
     while opcion1 != "G": 
         menuop()
         opcion1 = str(input("ingrese una opcion: ")).upper()
-        if(opcion1 == "A"): 
+        if(opcion1 == "A"):
             winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             limpiarPantalla()
             juego1()
         elif(opcion1 == "B"): 
             winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             juego2()
-        elif(opcion1 == "C"): 
+        elif(opcion1 == "C"):
             winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             juego3()
-        elif(opcion1 == "D"): 
+        elif(opcion1 == "D"):
             winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
             juego4()
         elif(opcion1 == "E"): 
@@ -1822,15 +1857,10 @@ def menu():
             verificar(contrasena)
         elif(opcion1 == "G"): 
             winsound.PlaySound("sonidos/seleccionar.wav", winsound.SND_ASYNC)
-            # mensajeAnimado("cerrando sesion", rojoIntenso)
             archivoLogOpc.close()
             archivoLogCat.close()
             archivoLogJug.close()
             despedida()
-            
-
-
-
 
 
 
